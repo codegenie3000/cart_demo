@@ -7,15 +7,24 @@
  * Created by Jonathan on 5/16/2017.
  */
 
-var SampleProductConstructor = function(name, price) {
-	this.name = name;
-	this.price = price;
-};
+var mongoose = require('mongoose');
 
-var itemOne = new SampleProductConstructor('Coffee Mug', '10');
-var itemTwo = new SampleProductConstructor('Pen', '2');
-var itemThree = new SampleProductConstructor('Paper', '20');
+var moment = require('moment');
 
-var itemArray = [itemOne, itemTwo, itemThree];
+var Schema = mongoose.Schema;
 
-module.exports = itemArray;
+var ProductSchema = Schema(
+	{
+		title: { type: String, required: true, max: 200 },
+		description: { type: String, required: true, max: 200 },
+		price: { type: Number, required: true },
+		images: { type: String, enum: true, required: false },
+		tags: { type: String, enum: true, required: false }
+	}
+);
+
+ProductSchema
+	.virtual('imageURL')
+	.get(function() {
+		return ''
+	})
