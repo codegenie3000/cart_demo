@@ -18,13 +18,18 @@ var ProductSchema = Schema(
 		title: { type: String, required: true, max: 200 },
 		description: { type: String, required: true, max: 200 },
 		price: { type: Number, required: true },
-		images: { type: String, enum: true, required: false },
-		tags: { type: String, enum: true, required: false }
+		images: [String],
+		tags: [String]
+		// tags: { type: String, enum: true, required: false }
 	}
 );
 
+/*
 ProductSchema
 	.virtual('imageURL')
 	.get(function() {
-		return ''
+		return this.images[]
 	})
+*/
+
+module.exports = mongoose.model('Product', ProductSchema);
