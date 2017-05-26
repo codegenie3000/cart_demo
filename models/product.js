@@ -24,12 +24,12 @@ var ProductSchema = Schema(
 	}
 );
 
-/*
 ProductSchema
-	.virtual('imageURL')
+	.virtual('decimalPrice')
 	.get(function() {
-		return this.images[]
-	})
-*/
+		var decimal = '.00';
+		var stringPrice = this.price.toString();
+		return stringPrice + decimal;
+	});
 
 module.exports = mongoose.model('Product', ProductSchema);

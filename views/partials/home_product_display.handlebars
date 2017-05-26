@@ -1,7 +1,9 @@
-<section class="container">
-	{{#each product_row }}
-		{{#each product }}
+{{> top_menu }}
 
-		{{/each}}
+<section class="container">
+	{{#each product_display}}
+		<p>{{title}}</p>
+		<p>{{description}}</p>
+		<p>${{decimalPrice}}</p>
 	{{/each}}
 </section>

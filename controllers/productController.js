@@ -7,8 +7,16 @@
  * Created by Jonathan on 5/16/2017.
  */
 
-var product = require('../models/product');
+var Product = require('../models/product');
 
-exports.product_list = function(req, res) {
-	res.render('productTemplate');
+exports.product_list = function(req, res, next) {
+	Product.find()
+		.sort([ [ 'title', 'ascending' ] ])
+		.exec(function (err, list_products) {
+			if (err) {return next(err);}
+			
+			res.render('./partials/home_product_display', {
+				product_display: list_products
+			});
+		});
 };
