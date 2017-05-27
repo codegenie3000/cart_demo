@@ -32,8 +32,23 @@ var products = require('./routes/product');
 
 var app = express();
 
+var hbs = exphbs.create({
+	defaultLayout: 'main',
+	helpers: 'helpers',
+	partialsDir: [
+		'views/partials/'
+	]
+});
+
 // view engine setup
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+/*app.engine('handlebars', exphbs({
+	defaultLayout: 'main',
+	helpers: 'helpers',
+	partialsDir: [
+		'views/partials/'
+	]
+}));*/
+app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 

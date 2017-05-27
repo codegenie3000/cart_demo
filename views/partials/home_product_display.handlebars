@@ -1,9 +1,10 @@
-{{> top_menu }}
-
 <section class="container">
 	{{#each product_display}}
-		<p>{{title}}</p>
-		<p>{{description}}</p>
-		<p>${{decimalPrice}}</p>
+		<div class="row">
+			<div class="col-sm-12">
+				<p>{{title}}</p>
+				<p>${{decimalPrice}}</p>
+			</div>
+		</div>
 	{{/each}}
 </section>

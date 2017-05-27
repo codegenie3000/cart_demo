@@ -10,8 +10,14 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function (req, res) {
-	res.render('home');
-});
+const productController = require('../controllers/productController');
+// get product list
+
+/*router.get('/', function (req, res) {
+	res.render('home', {
+		headline: 'Amazing products'
+	});
+});*/
+router.get('/', productController.product_list);
 
 module.exports = router;

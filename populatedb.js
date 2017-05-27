@@ -46,13 +46,13 @@ function createProducts(callback) {
 	async.parallel(
 		[
 			function (callback) {
-				productCreate("Product 1", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 100, ["image1.jpeg", "image2.jpeg"], ["tag1", "tag2"], callback);
+				productCreate("Product 1", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 100, ["image01.jpeg", "image02.jpeg"], ["tag1", "tag2"], callback);
 			},
 			function (callback) {
-				productCreate("Product 2", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 200, ["image1.jpeg", "image2.jpeg"], ["tag1", "tag2"], callback);
+				productCreate("Product 2", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 200, ["image03.jpeg", "image04.jpeg"], ["tag1", "tag2"], callback);
 			},
 			function (callback) {
-				productCreate("Product 3", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 300, ["image1.jpeg", "image2.jpeg"], ["tag1", "tag2"], callback);
+				productCreate("Product 3", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 300, ["image01.jpeg", "image02.jpeg"], ["tag1", "tag2"], callback);
 			}
 		],
 		callback

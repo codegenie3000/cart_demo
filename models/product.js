@@ -32,4 +32,14 @@ ProductSchema
 		return stringPrice + decimal;
 	});
 
+ProductSchema
+	.virtual('imageURLs')
+	.get(function() {
+		var cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
+		var concatArray = this.images.map(function (image) {
+			return cloudfrontURL + image;
+		});
+		return concatArray;
+	});
+
 module.exports = mongoose.model('Product', ProductSchema);
