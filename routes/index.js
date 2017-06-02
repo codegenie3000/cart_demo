@@ -18,6 +18,6 @@ const productController = require('../controllers/productController');
 		headline: 'Amazing products'
 	});
 });*/
-router.get('/', productController.product_list);
+router.get('/', productController.index);
 
 module.exports = router;

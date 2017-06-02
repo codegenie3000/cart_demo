@@ -5,6 +5,7 @@
 
 var express = require('express');
 var exphbs = require('express-handlebars');
+var helpers = require('./lib/helpers');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
@@ -34,7 +35,7 @@ var app = express();
 
 var hbs = exphbs.create({
 	defaultLayout: 'main',
-	helpers: 'helpers',
+	helpers: helpers,
 	partialsDir: [
 		'views/partials/'
 	]
@@ -66,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 });*/
 
 app.use('/', index);
-app.use('/products', products);
+app.use('/product', products);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

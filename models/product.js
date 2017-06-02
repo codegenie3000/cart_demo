@@ -25,6 +25,12 @@ var ProductSchema = Schema(
 );
 
 ProductSchema
+	.virtual('url')
+	.get(function () {
+		return '/product/' + this._id;
+	});
+
+ProductSchema
 	.virtual('decimalPrice')
 	.get(function() {
 		var decimal = '.00';
@@ -33,13 +39,21 @@ ProductSchema
 	});
 
 ProductSchema
-	.virtual('imageURLs')
+	.virtual('imageURLArray')
 	.get(function() {
 		var cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
 		var concatArray = this.images.map(function (image) {
 			return cloudfrontURL + image;
 		});
+		
 		return concatArray;
+	});
+
+ProductSchema
+	.virtual('mainImage')
+	.get(function() {
+		var cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
+		return cloudfrontURL + this.images[0];
 	});
 
 module.exports = mongoose.model('Product', ProductSchema);

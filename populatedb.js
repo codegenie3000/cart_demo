@@ -21,6 +21,8 @@ var Product = require('./models/product');
 
 var products = [];
 
+debugger;
+
 function productCreate(title, description, price, imageArray, tagArray, callback) {
 	var productDetail = {
 		title: title,
@@ -43,16 +45,25 @@ function productCreate(title, description, price, imageArray, tagArray, callback
 }
 
 function createProducts(callback) {
-	async.parallel(
+	async.series(
 		[
 			function (callback) {
-				productCreate("Product 1", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 100, ["image01.jpeg", "image02.jpeg"], ["tag1", "tag2"], callback);
+				productCreate("Product 1", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 100, ["product01.png", "product02.png"], ["tag1", "tag2"], callback);
 			},
 			function (callback) {
-				productCreate("Product 2", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 200, ["image03.jpeg", "image04.jpeg"], ["tag1", "tag2"], callback);
+				productCreate("Product 2", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 200, ["product03.png", "product04.png"], ["tag1", "tag2"], callback);
 			},
 			function (callback) {
-				productCreate("Product 3", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 300, ["image01.jpeg", "image02.jpeg"], ["tag1", "tag2"], callback);
+				productCreate("Product 3", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 300, ["product01.png", "product02.png"], ["tag1", "tag2"], callback);
+			},
+			function (callback) {
+				productCreate("Product 4", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 400, ["product03.png", "product04.png"], ["tag1", "tag2"], callback);
+			},
+			function (callback) {
+				productCreate("Product 5", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 500, ["product01.png", "product02.png"], ["tag1", "tag2"], callback);
+			},
+			function (callback) {
+				productCreate("Product 6", "Take over! See to him! Look there! They're madmen! They're heading for the prison level. If you hurry, you might catch them. Follow me! You stand guard. Come on! Oh! All this excitement has overrun the circuits of my counterpart here.", 600, ["product03.png", "product04.png"], ["tag1", "tag2"], callback);
 			}
 		],
 		callback

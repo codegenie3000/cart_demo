@@ -22,24 +22,28 @@ exports.product_list = function(req, res, next) {
 		});
 };*/
 
-exports.product_list = function(req, res, next) {
+exports.index = function(req, res, next) {
 	Product.find({})
 		.exec(function (err, list_products) {
+			// Diplay title, decimal price, and main image
 			if (err) { return next(err)}
-			// console.log(list_products);
-			/*
-			* goal: <div class="row">
-			*           <div class="col-sm-6">
-			*               <img>
-			*           </div>
-			*       </div>
-			* calculate # of rows
-			* create array with [ [ col, col ], [col, col] ], [...]
-			*
-			* */
 			res.render('home', {
 				headline: 'Amazing products',
-				product_display: list_products
+				product: list_products
+			});
+		});
+};
+
+exports.product_detail = function (req, res, next) {
+	console.log(req.params.id);
+	Product.findById(req.params.id)
+		.exec(function (err, product) {
+			console.log(product.title);
+			if (err)
+				return next(err);
+			res.render('product_detail', {
+				product_data: product
+				// title: product.title
 			});
 		});
 };
