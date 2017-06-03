@@ -29,7 +29,7 @@ var expressValidator = require('express-validator');
 // var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 
 var index = require('./routes/index');
-var products = require('./routes/product');
+var products = require('./routes/products');
 
 var app = express();
 
