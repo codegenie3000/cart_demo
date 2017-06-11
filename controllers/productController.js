@@ -38,11 +38,13 @@ exports.product_detail = function (req, res, next) {
 	console.log(req.params.id);
 	Product.findById(req.params.id)
 		.exec(function (err, product) {
-			console.log(product.title);
 			if (err)
 				return next(err);
+			var imageArray = product.imageURLArray;
 			res.render('product_detail', {
-				product_data: product
+				layout: 'product_detail',
+				product_data: product,
+				images: imageArray
 				// title: product.title
 			});
 		});

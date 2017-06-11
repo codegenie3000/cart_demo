@@ -5,7 +5,21 @@
 			<div class="col-sm-12 text-center">
 				<h1>{{title}}</h1>
 				<p class="lead">${{decimalPrice}}</p>
-				<p>Placeholder for images</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="fotorama" data-width="50%" data-ratio="600/600">
+	{{/with}}
+					{{#each images}}
+						<img src="{{image}}">
+					{{/each}}
+				</div>
+	{{#with product_data}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
 				<p>{{description}}</p>
 			</div>
 		</div>
