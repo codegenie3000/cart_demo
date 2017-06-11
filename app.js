@@ -24,6 +24,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 
+var cookieSession = require('cookie-session');
+
 // var index = require('./routes/index');
 // var users = require('./routes/users');
 // var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
@@ -62,9 +64,10 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*app.get('/', function(req, res) {
-	res.render('home');
-});*/
+app.use(cookieSession({
+	name: 'session',
+	keys: ['key1', 'key2']
+}));
 
 app.use('/', index);
 app.use('/product', products);

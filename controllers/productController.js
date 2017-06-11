@@ -49,3 +49,14 @@ exports.product_detail = function (req, res, next) {
 			});
 		});
 };
+
+exports.add_to_cart = function (req, res, next) {
+	req.checkBody('qtySelect', 'Quantity must be specified.').notEmpty();
+	req.sanitize('qtySelect');
+	var productId = req.params.id;
+	var qtySelected = req.body.qtySelect;
+	var productArray = [];
+	productArray.push({ itemId: productId, qty: qtySelected});
+	req.session.itemQty = productArray;
+	var foo = 'bar';
+};

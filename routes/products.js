@@ -15,4 +15,6 @@ const productController = require('../controllers/productController');
 
 router.get('/:id', productController.product_detail);
 
+router.post('/:id', productController.add_to_cart);
+
 module.exports = router;
