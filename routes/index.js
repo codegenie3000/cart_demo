@@ -10,6 +10,8 @@
 var express = require('express');
 var router = express.Router();
 
+const generalController = require('../controllers/generalController');
+
 const productController = require('../controllers/productController');
 // get product list
 
@@ -19,5 +21,7 @@ const productController = require('../controllers/productController');
 	});
 });*/
 router.get('/', productController.index);
+
+router.get('/about', generalController.about);
 
 module.exports = router;

@@ -28,6 +28,7 @@ exports.index = function(req, res, next) {
 			// Diplay title, decimal price, and main image
 			if (err) { return next(err)}
 			res.render('home', {
+				home: true,
 				headline: 'Amazing products',
 				product: list_products
 			});
