@@ -28,7 +28,9 @@ exports.index = function(req, res, next) {
 			// Diplay title, decimal price, and main image
 			if (err) { return next(err)}
 			res.render('home', {
-				home: true,
+				general: {
+					home: true
+				},
 				headline: 'Amazing products',
 				product: list_products
 			});
@@ -59,5 +61,5 @@ exports.add_to_cart = function (req, res, next) {
 	var productArray = [];
 	productArray.push({ itemId: productId, qty: qtySelected});
 	req.session.itemQty = productArray;
-	var foo = 'bar';
+	
 };

@@ -8,6 +8,8 @@
  */
 exports.about = function(req, res, next) {
 	res.render('about', {
-		about: true
+		general: {
+			about: true
+		}
 	});
 };

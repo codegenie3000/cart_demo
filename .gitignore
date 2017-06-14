@@ -58,4 +58,5 @@ typings/
 .env
 
 .idea/workspace.xml
+.idea/tasks.xml
 #public/*

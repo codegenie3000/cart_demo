@@ -15,11 +15,6 @@ const generalController = require('../controllers/generalController');
 const productController = require('../controllers/productController');
 // get product list
 
-/*router.get('/', function (req, res) {
-	res.render('home', {
-		headline: 'Amazing products'
-	});
-});*/
 router.get('/', productController.index);
 
 router.get('/about', generalController.about);

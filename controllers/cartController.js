@@ -9,6 +9,8 @@
 
 exports.index = function(req, res, next) {
 	res.render('cart', {
-		
+		general: {
+			cart: true
+		}
 	});
 };
