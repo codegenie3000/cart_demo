@@ -13,4 +13,6 @@ const cartController = require('../controllers/cartController');
 
 router.get('/', cartController.index);
 
+router.get('/data', cartController.returnData);
+
 module.exports = router;

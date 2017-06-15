@@ -24,11 +24,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 
-var cookieSession = require('cookie-session');
+// var cookieSession = require('cookie-session');
 
-// var index = require('./routes/index');
-// var users = require('./routes/users');
-// var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
+// express-session
+var session = require('express-session');
 
 var index = require('./routes/index');
 var products = require('./routes/products');
@@ -40,7 +39,8 @@ var hbs = exphbs.create({
 	defaultLayout: 'main',
 	helpers: helpers,
 	partialsDir: [
-		'views/partials/'
+		'views/partials/',
+		'views/partials/head/'
 	]
 });
 
@@ -56,6 +56,15 @@ app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
+// express-session
+app.use(session({
+	saveUninitialized: true,
+	secret: 'baby',
+	resave: true,
+	secure: false
+	
+}));
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -64,11 +73,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(cookieSession({
-	name: 'session',
-	keys: ['key1', 'key2']
-}));
 
 app.use('/', index);
 app.use('/product', products);

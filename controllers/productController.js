@@ -60,6 +60,11 @@ exports.add_to_cart = function (req, res, next) {
 	var qtySelected = req.body.qtySelect;
 	var productArray = [];
 	productArray.push({ itemId: productId, qty: qtySelected});
-	req.session.itemQty = productArray;
-	
+	var sess = req.session;
+	sess.itemQty = productArray;
+	sess.save(function (err) {
+		if (err)
+			return next(err);
+		res.redirect('/cart');
+	});
 };
