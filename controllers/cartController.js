@@ -11,13 +11,13 @@ exports.index = function(req, res, next) {
 	var sess = req.session;
 	console.log(sess.itemQty);
 	res.render('cart', {
-		layout: 'cart',
 		general: {
 			cart: true
 		}
 	});
 };
 
+/*
 exports.returnData = function(req, res, next) {
 
-}
+}*/

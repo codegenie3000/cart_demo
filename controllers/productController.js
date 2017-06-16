@@ -38,7 +38,6 @@ exports.index = function(req, res, next) {
 };
 
 exports.product_detail = function (req, res, next) {
-	console.log(req.params.id);
 	Product.findById(req.params.id)
 		.exec(function (err, product) {
 			if (err)
@@ -56,13 +55,28 @@ exports.product_detail = function (req, res, next) {
 exports.add_to_cart = function (req, res, next) {
 	req.checkBody('qtySelect', 'Quantity must be specified.').notEmpty();
 	req.sanitize('qtySelect');
-	var productId = req.params.id;
-	var qtySelected = req.body.qtySelect;
-	var productArray = [];
-	productArray.push({ itemId: productId, qty: qtySelected});
+	var itemObject = (function() {
+		var productId =  req.params.id;
+		var qtySelected = parseInt(req.body.qtySelect);
+		return { itemId: productId, qty: qtySelected};
+	})();
 	var sess = req.session;
-	sess.itemQty = productArray;
-	sess.save(function (err) {
+	var sessionItemArray = sess.itemQty;
+	if (sessionItemArray) {
+		var found = false;
+		sessionItemArray.forEach(function (item) {
+			if (item.itemId === itemObject.itemId) {
+				item.qty += itemObject.qty;
+				found = true;
+			}
+		});
+		if (!found) {
+			sessionItemArray.push(itemObject);
+		}
+	} else {
+		sess.itemQty = [itemObject];
+	}
+	req.session.save(function (err) {
 		if (err)
 			return next(err);
 		res.redirect('/cart');
