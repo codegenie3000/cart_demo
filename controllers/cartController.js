@@ -7,14 +7,32 @@
  * Created by jonathan on 6/14/17.
  */
 
+var Product = require('../models/product');
+
 exports.index = function(req, res, next) {
-	var sess = req.session;
-	console.log(sess.itemQty);
-	res.render('cart', {
-		general: {
-			cart: true
-		}
-	});
+	
+	var cartItems = req.session.itemQty;
+	var itemsInCart = [];
+	if (cartItems) {
+		itemsInCart = cartItems.map(function (item) {
+			return item.itemId;
+		});
+		Product.find({
+			_id: {$in: itemsInCart}
+		}, function(err, catalogItems) {
+			
+			
+			res.render('cart', {
+				layout: 'cart',
+				item_in_cart: catalogItems,
+				general: {
+					cart: true
+				}
+			});
+		});
+	}
+	// console.log(sess.itemQty);
+	
 };
 
 /*

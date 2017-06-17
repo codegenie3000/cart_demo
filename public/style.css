@@ -6,3 +6,32 @@
 .fotorama__wrap {
     margin: 0 auto;
 }
+
+img.cart-thumb {
+    width: 100px;
+    margin-right: 10px;
+}
+
+div.match-cart-height {
+    height: 100px;
+    position: relative;
+}
+
+span.test, div.match-height {
+    display: block;
+    position: absolute;
+    height: 100px;
+    top: 40%;
+}
+
+div.product-row {
+    margin-bottom: 15px;
+}
+
+div.add-space {
+    margin-bottom: 15px;
+}
+
+div.align-right {
+    right: 0;
+}
