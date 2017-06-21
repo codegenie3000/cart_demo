@@ -10,20 +10,22 @@
             <div class="col-sm-3 match-cart-height">
                 <div class="form-group match-height align-right">
                     <label for="qtySelectItem{{_id}}" hidden>Select Quantity</label>
-    {{/each}}
+
                     <select class="form-control" id="qtySelectItem{{_id}}">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
+                        <option {{cart_qty 1 qty}}>1</option>
+                        <option {{cart_qty 2 qty}}>2</option>
+                        <option {{cart_qty 3 qty}}>3</option>
+                        <option {{cart_qty 4 qty}}>4</option>
+                        <option {{cart_qty 5 qty}}>5</option>
+                        <option {{cart_qty 6 qty}}>6</option>
+                        <option {{cart_qty 7 qty}}>7</option>
+                        <option {{cart_qty 8 qty}}>8</option>
+                        <option {{cart_qty 9 qty}}>9</option>
+                        <option {{cart_qty 10 qty}}> 10</option>
                     </select>
+                    <a href="#" id="delete{{_id}}" class="delete-button">delete</a>
                 </div>
             </div>
         </div>
+    {{/each}}
 </div>
