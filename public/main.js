@@ -12,7 +12,7 @@ $('.delete-button').click(function(e) {
 	e.preventDefault();
 	var re = /delete(\S*)/;
 	var id = re.exec(this.id)[1];
-	$.ajax('/cart/delete_product', {
+	$.ajax('/cart/delete_product/', {
 		success: function (data) {
 			console.log(data);
 		}

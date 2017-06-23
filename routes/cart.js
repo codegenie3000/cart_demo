@@ -13,8 +13,12 @@ const cartController = require('../controllers/cartController');
 
 router.get('/', cartController.index);
 
-router.get('/delete_product', function (req, res) {
+/*router.get('/delete_product', function (req, res) {
 	res.json({foo: 'bar'});
+});*/
+
+router.get('/delete_product', function (req, res) {
+	cartController.deleteProduct);
 });
 
 // router.get('/data', cartController.returnData);

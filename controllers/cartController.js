@@ -41,8 +41,12 @@ exports.index = function(req, res, next) {
 				var foo = bar.reduce(function (prevVal, elem) {
 					return prevVal + elem.a;
 				}, 0);
-				
-				console.log(foo);
+
+				var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+					return prevVal + (elem.qty * elem.price);
+				},0);
+
+				//TODO create regex and convert number to decimal and comma format
 				
 				res.render('cart', {
 					layout: 'cart',
@@ -50,7 +54,7 @@ exports.index = function(req, res, next) {
 					general: {
 						cart: true
 					},
-					subTotal: foo
+					subTotal: subTotal
 				});
 			});
 		}
@@ -62,4 +66,9 @@ exports.index = function(req, res, next) {
 			}
 		});
 	}
+};
+
+exports.delete_product = function(req, res, next) {
+	var cartItems = req.session.itemQty;
+	
 };
