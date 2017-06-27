@@ -13,14 +13,8 @@ const cartController = require('../controllers/cartController');
 
 router.get('/', cartController.index);
 
-/*router.get('/delete_product', function (req, res) {
-	res.json({foo: 'bar'});
-});*/
+router.get('/remove/:id', cartController.remove_product);
 
-router.get('/delete_product', function (req, res) {
-	cartController.deleteProduct);
-});
-
-// router.get('/data', cartController.returnData);
+router.get('/change_qty/')
 
 module.exports = router;

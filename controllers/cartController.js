@@ -68,7 +68,28 @@ exports.index = function(req, res, next) {
 	}
 };
 
-exports.delete_product = function(req, res, next) {
-	var cartItems = req.session.itemQty;
-	
+exports.remove_product = function(req, res, next) {
+	var productId = req.params.id;
+	var itemQtyArr = req.session.itemQty;
+	// loop through session array
+	// if the id in the object of the array matches the productId
+	// then find the index of that object in the array
+	// use splice to remove that element
+
+	var index = itemQtyArr.findIndex(function (element) {
+		var foo = element;
+		return element.itemId === productId;
+	});
+	itemQtyArr.splice(index, 1);
+	req.session.itemQty = itemQtyArr;
+	req.session.save(function (err) {
+		if (err)
+			return next(err);
+		res.redirect('/cart');
+	});
+	// res.redirect('/');
+};
+
+exports.change_qty = function(req, res, next) {
+
 };
