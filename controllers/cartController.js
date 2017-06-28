@@ -10,9 +10,9 @@
 var Product = require('../models/product');
 
 exports.index = function(req, res, next) {
-	
 	if (req.session.itemQty) {
 		var cartItems = req.session.itemQty;
+		console.log('ran', cartItems);
 		var itemsInCart = [];
 		if (cartItems) {
 			itemsInCart = cartItems.map(function (item) {
@@ -35,19 +35,14 @@ exports.index = function(req, res, next) {
 					}
 					return merged;
 				})();
-				
-				var bar = [{a: 1}, {a: 2}];
-				
-				var foo = bar.reduce(function (prevVal, elem) {
-					return prevVal + elem.a;
-				}, 0);
 
 				var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
 					return prevVal + (elem.qty * elem.price);
 				},0);
+				console.log(mergedCartItems);
 
 				//TODO create regex and convert number to decimal and comma format
-				
+				console.log('ran with calc', subTotal);
 				res.render('cart', {
 					layout: 'cart',
 					item_in_cart: mergedCartItems,
@@ -59,6 +54,7 @@ exports.index = function(req, res, next) {
 			});
 		}
 	} else {
+		console.log('ran no calc');
 		res.render('cart', {
 			layout: 'cart',
 			general: {
@@ -91,5 +87,16 @@ exports.remove_product = function(req, res, next) {
 };
 
 exports.change_qty = function(req, res, next) {
-
+	var itemObj = req.body;
+	var sessionArray = req.session.itemQty;
+	for (var i = 0; i < sessionArray.length; i++) {
+		if (sessionArray[i].itemId === itemObj.itemId) {
+			sessionArray[i].qty = parseInt(itemObj.qty);
+		}
+	}
+	req.session.save(function (err) {
+		if (err)
+			return next(err);
+		res.redirect('/cart');
+	});
 };

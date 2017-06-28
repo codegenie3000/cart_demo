@@ -13,8 +13,8 @@ const cartController = require('../controllers/cartController');
 
 router.get('/', cartController.index);
 
-router.get('/remove/:id', cartController.remove_product);
+router.post('/change_qty', cartController.change_qty);
 
-router.get('/change_qty/')
+router.get('/remove/:id', cartController.remove_product);
 
 module.exports = router;
