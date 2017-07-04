@@ -12,7 +12,6 @@ var Product = require('../models/product');
 exports.index = function(req, res, next) {
 	if (req.session.itemQty) {
 		var cartItems = req.session.itemQty;
-		console.log('ran', cartItems);
 		var itemsInCart = [];
 		if (cartItems) {
 			itemsInCart = cartItems.map(function (item) {
@@ -39,17 +38,19 @@ exports.index = function(req, res, next) {
 				var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
 					return prevVal + (elem.qty * elem.price);
 				},0);
-				console.log(mergedCartItems);
-
+				
+				var shipping = (subTotal * 0.2).toString();
+				
 				//TODO create regex and convert number to decimal and comma format
-				console.log('ran with calc', subTotal);
+				console.log('ran with calc', subTotal.toString());
 				res.render('cart', {
 					layout: 'cart',
 					item_in_cart: mergedCartItems,
+					subTotal: subTotal.toString(),
+					shipping: shipping,
 					general: {
 						cart: true
-					},
-					subTotal: subTotal
+					}
 				});
 			});
 		}
@@ -97,6 +98,7 @@ exports.change_qty = function(req, res, next) {
 	req.session.save(function (err) {
 		if (err)
 			return next(err);
-		res.redirect('/cart');
+		console.log('ran');
+		res.send('success');
 	});
 };

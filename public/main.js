@@ -19,13 +19,32 @@ $('.change-qty').change(function (e) {
 		itemId: itemId,
 		qty: qty
 	};
-	debugger;
 	// $.post('/cart/change_qty', obj);
-	$.post({
+	/*$.ajax({
+		method: 'POST',
 		url: '/cart/change_qty',
 		dataType: 'json',
-		data: obj
-	});
+		data: obj,
+		success: function(data) {
+			console.log(data);
+			/!*debugger;
+			window.location = '/cart';*!/
+		},
+		error: function() {
+			console.log('error');
+		}
+	});*/
+	$.post('/cart/change_qty', {
+		data: obj,
+		dataType: 'json',
+		success: function(data) {
+			console.log('success');
+			window.location = '/cart/';
+		}/*,
+		error: function() {
+			console.log('error');
+		}*/
+	})
 });
 
 /*
