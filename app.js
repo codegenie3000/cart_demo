@@ -3,15 +3,21 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
+require('dotenv').config();
+
 var express = require('express');
 var exphbs = require('express-handlebars');
 var helpers = require('./lib/helpers');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var dbURL = process.argv[2],
+/*var dbURL = process.argv[2],
 	user = process.argv[3],
 	pw = process.argv[4];
+var dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;*/
+var dbURL = process.env.DB_HOST,
+	user = process.env.DB_USER,
+	pw = process.env.DB_PASS;
 var dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;
 mongoose.connect(dbURI);
 var db = mongoose.connection;
