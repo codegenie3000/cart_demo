@@ -35,16 +35,18 @@ $('.change-qty').change(function (e) {
 		}
 	});*/
 	$.post('/cart/change_qty', {
-		data: obj,
+		data: JSON.stringify(obj),
 		dataType: 'json',
 		success: function(data) {
-			console.log('success');
+			debugger;
+			console.log(data);
+			// goToCart();
 			window.location = '/cart/';
 		}/*,
 		error: function() {
 			console.log('error');
 		}*/
-	})
+	});
 });
 
 /*

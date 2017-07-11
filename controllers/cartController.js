@@ -39,7 +39,9 @@ exports.index = function(req, res, next) {
 					return prevVal + (elem.qty * elem.price);
 				},0);
 				
-				var shipping = (subTotal * 0.2).toString();
+				var shipping = (subTotal * 0.2);
+				
+				var total = subTotal + shipping;
 				
 				//TODO create regex and convert number to decimal and comma format
 				console.log('ran with calc', subTotal.toString());
@@ -47,7 +49,8 @@ exports.index = function(req, res, next) {
 					layout: 'cart',
 					item_in_cart: mergedCartItems,
 					subTotal: subTotal.toString(),
-					shipping: shipping,
+					shipping: shipping.toString(),
+					total: total.toString(),
 					general: {
 						cart: true
 					}
@@ -88,7 +91,7 @@ exports.remove_product = function(req, res, next) {
 };
 
 exports.change_qty = function(req, res, next) {
-	var itemObj = req.body;
+	var itemObj = JSON.parse(req.body.data);
 	var sessionArray = req.session.itemQty;
 	for (var i = 0; i < sessionArray.length; i++) {
 		if (sessionArray[i].itemId === itemObj.itemId) {
@@ -99,6 +102,6 @@ exports.change_qty = function(req, res, next) {
 		if (err)
 			return next(err);
 		console.log('ran');
-		res.send('success');
+		res.send({status: 'success'});
 	});
 };
