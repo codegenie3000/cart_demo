@@ -28,6 +28,7 @@ exports.index = function(req, res, next) {
 			// Diplay title, decimal price, and main image
 			if (err) { return next(err)}
 			res.render('home', {
+				pageName: 'Catalog',
 				general: {
 					home: true
 				},

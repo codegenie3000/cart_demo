@@ -53,7 +53,8 @@ exports.index = function(req, res, next) {
 					total: total.toString(),
 					general: {
 						cart: true
-					}
+					},
+					pageName: 'Your cart'
 				});
 			});
 		}
@@ -63,7 +64,8 @@ exports.index = function(req, res, next) {
 			layout: 'cart',
 			general: {
 				cart: true
-			}
+			},
+			pageName: 'Your cart'
 		});
 	}
 };

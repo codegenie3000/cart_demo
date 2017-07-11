@@ -10,6 +10,7 @@ exports.about = function(req, res, next) {
 	res.render('about', {
 		general: {
 			about: true
-		}
+		},
+		pageName: 'About'
 	});
 };
