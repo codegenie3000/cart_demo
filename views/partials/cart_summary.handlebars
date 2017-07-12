@@ -23,9 +23,11 @@
             {{total}}
         </div>
     </div>
-    <div class="row add-space">
-        <div class="col-sm-3 col-sm-offset-9">
-            <button type="submit" class="btn btn-primary">Check Out</button>
+    {{#if itemsInCart}}
+        <div class="row add-space">
+            <div class="col-sm-3 col-sm-offset-9">
+                <button type="button" class="btn btn-primary">Check Out</button>
+            </div>
         </div>
-    </div>
+    {{/if}}
 </div>

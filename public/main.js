@@ -19,21 +19,6 @@ $('.change-qty').change(function (e) {
 		itemId: itemId,
 		qty: qty
 	};
-	// $.post('/cart/change_qty', obj);
-	/*$.ajax({
-		method: 'POST',
-		url: '/cart/change_qty',
-		dataType: 'json',
-		data: obj,
-		success: function(data) {
-			console.log(data);
-			/!*debugger;
-			window.location = '/cart';*!/
-		},
-		error: function() {
-			console.log('error');
-		}
-	});*/
 	$.post('/cart/change_qty', {
 		data: JSON.stringify(obj),
 		dataType: 'json',
@@ -42,11 +27,14 @@ $('.change-qty').change(function (e) {
 			console.log(data);
 			// goToCart();
 			window.location = '/cart/';
-		}/*,
-		error: function() {
-			console.log('error');
-		}*/
+		}
 	});
+});
+
+$(':button').click(function(e) {
+	console.log('clicked');
+	this.blur();
+	window.location = '/cart/checkout01';
 });
 
 /*

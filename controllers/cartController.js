@@ -47,7 +47,8 @@ exports.index = function(req, res, next) {
 				console.log('ran with calc', subTotal.toString());
 				res.render('cart', {
 					layout: 'cart',
-					item_in_cart: mergedCartItems,
+					itemsInCart: true,
+					cartItems: mergedCartItems,
 					subTotal: subTotal.toString(),
 					shipping: shipping.toString(),
 					total: total.toString(),
@@ -62,6 +63,7 @@ exports.index = function(req, res, next) {
 		console.log('ran no calc');
 		res.render('cart', {
 			layout: 'cart',
+			itemsInCart: false,
 			general: {
 				cart: true
 			},
@@ -105,5 +107,12 @@ exports.change_qty = function(req, res, next) {
 			return next(err);
 		console.log('ran');
 		res.send({status: 'success'});
+	});
+};
+
+exports.check_out = function(req, res, next) {
+	res.render('checkout01', {
+		layout: 'cart',
+		pageName: 'Shipping Address'
 	});
 };
