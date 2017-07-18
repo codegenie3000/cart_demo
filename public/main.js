@@ -8,7 +8,8 @@
  */
 
 $(document).ready(function() {
-	$('.change-qty').change(function (e) {
+	var $cart = $('#cart');
+	$cart.find('select.change-qty').change(function (e) {
 		e.preventDefault();
 		var qty = parseInt(this.value);
 		var refId = this.id;
@@ -31,28 +32,9 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
-	$(':button').click(function(e) {
+	$cart.find('#checkOut').click(function(e) {
 		console.log('clicked');
 		this.blur();
 		window.location = '/cart/checkout01';
 	});
-	
-	/*
-	 $('.delete-button').click(function(e) {
-	 e.preventDefault();
-	 var re = /delete(\S*)/;
-	 var id = re.exec(this.id)[1];
-	 /!*debugger;
-	 e.preventDefault();
-	 var re = /delete(\S*)/;
-	 var id = re.exec(this.id)[1];
-	 $.ajax('/cart/delete_product/', {
-	 data: id,
-	 dataType: 'text',
-	 success: function (data) {
-	 console.log(data);
-	 }
-	 });*!/
-	 });*/
 });
