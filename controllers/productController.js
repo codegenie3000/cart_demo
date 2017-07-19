@@ -45,7 +45,6 @@ exports.product_detail = function (req, res, next) {
 				return next(err);
 			var imageArray = product.imageURLArray;
 			res.render('product_detail', {
-				layout: 'product_detail',
 				product_data: product,
 				images: imageArray
 				// title: product.title

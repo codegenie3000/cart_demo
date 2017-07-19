@@ -46,7 +46,6 @@ exports.index = function(req, res, next) {
 				//TODO create regex and convert number to decimal and comma format
 				console.log('ran with calc', subTotal.toString());
 				res.render('cart', {
-					layout: 'cart',
 					itemsInCart: true,
 					cartItems: mergedCartItems,
 					subTotal: subTotal.toString(),
@@ -62,7 +61,6 @@ exports.index = function(req, res, next) {
 	} else {
 		console.log('ran no calc');
 		res.render('cart', {
-			layout: 'cart',
 			itemsInCart: false,
 			general: {
 				cart: true
@@ -112,7 +110,6 @@ exports.change_qty = function(req, res, next) {
 
 exports.check_out = function(req, res, next) {
 	res.render('checkout01', {
-		layout: 'cart',
 		pageName: 'Shipping Address'
 	});
 };
