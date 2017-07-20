@@ -9,15 +9,15 @@
         </div>
     </div>
 
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="checkout01-form">
         <div class="form-group">
-            <label for="email" class="col-sm-2 control-label">Email</label>
+            <label for="email" class="col-sm-2 control-label">Email*</label>
             <div class="col-sm-10">
                 <input type="email" class="form-control col-sm-10" id="email" placeholder="Email" required>
             </div>
         </div>
         <div class="form-group">
-            <label for="address1" class="col-sm-2 control-label">Address 1</label>
+            <label for="address1" class="col-sm-2 control-label">Address 1*</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control col-sm-10" id="address1" placeholder="1 Main St." required>
             </div>
@@ -30,15 +30,15 @@
         </div>
 
         <div class="form-group">
-            <label for="cityStateZip" class="col-sm-2 control-label">City, State, Zip</label>
+            <label for="cityStateZip" class="col-sm-2 control-label">City, State, Zip*</label>
             <div class="col-sm-10">
                 <div class="form-inline">
                     <div class="form-group">
-                        <label for="city" class="control-label sr-only">City</label>
-                        <input type="text" class="form-control col-sm-2" id="city" placeholder="City">
+                        <label for="city" class="control-label sr-only">City*</label>
+                        <input type="text" class="form-control col-sm-2" id="city" placeholder="City" required>
                     </div>
                     <div class="form-group">
-                        <label for="state" class="control-label sr-only">State</label>
+                        <label for="state" class="control-label sr-only">State*</label>
                         <select class="form-control" id="state">
                             <option value="AL">AL</option>
                             <option value="AK">AK</option>
@@ -94,15 +94,15 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="zip" class="control-label sr-only">Zip code</label>
-                        <input type="text" class="form-control" id="zip" placeholder="Zip" maxlength="10">
+                        <label for="zip" class="control-label sr-only">Zip code*</label>
+                        <input type="text" class="form-control" id="zip" placeholder="Zip" maxlength="10" required>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="phone" class="col-sm-2 control-label">Phone</label>
+            <label for="phone" class="col-sm-2 control-label">Phone*</label>
             <div class="col-sm-3">
                 <input type="tel" class="form-control" id="phone" maxlength="10">
             </div>
@@ -122,6 +122,9 @@
             </div>
         </div>
     </form>
+    <div class="col-sm-offset-2 col-sm-10">
+        <p class="small">*Required field</p>
+    </div>
 </div>
 {{> scripts }}
 </body>
