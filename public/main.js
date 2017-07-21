@@ -40,15 +40,39 @@ $(document).ready(function() {
 	}
 	if (document.getElementById('checkout') && document.getElementsByClassName('step01')) {
 		var $checkout01 = $('.step01');
-	//	when form is submitted (this is because all fields are formed
-	//	validate the email address
-	//	if email address isn't valid:
-	//	blur the next button
-	//	inform user that email address isn't valid
-	//	if email address IS valid
 	//	place the form data in an object
 	//	post the object to the server
+		
 		var $form = $checkout01.find('#checkout01-form');
+		var $button = $('#checkout01-form').find(':button');
+		$('.required').on('input propertychange paste', function() { // Add propertychange and paste?
+			$('.required').each(function() {
+				if (!$(this).val()) {
+					$button.prop('disabled', 'disabled');
+					return false;
+				} else {
+					$button.prop('disabled', false);
+				}
+			});
+		});
+		
+		var checkEmailAgain = false;
+		
+		$form.find('#email').on('input propertychange paste', function() {
+			if (checkEmailAgain) {
+				var emailAddress = $(this).val();
+				var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+				
+				if (emailRegex.test(emailAddress)) {
+					var formGroup = $('#checkout01-form').find('#email');
+					var formParent = formGroup.parent();
+					$('.help-block').remove();
+					formParent.removeClass('has-warning');
+					formParent.addClass('has-success');
+				}
+			}
+		});
+		
 		$form.submit(function (e) {
 			e.preventDefault();
 			// get email address
@@ -56,16 +80,35 @@ $(document).ready(function() {
 			var emailAddress = form[0].value;
 			var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 			if (emailRegex.test(emailAddress)) {
-			
+				$('button, input[type="button"]').blur();
+				var getFormData = function () {
+					var form = document.getElementById('checkout01-form');
+					var billingData = Object.create(null);
+					for (var i = 0; i < form.length - 1; i++) {
+						if (form[i].id !== 'bill-same-as-ship') {
+							billingData[form[i].id] = form[i].value;
+						} else {
+							billingData[form[i].id] = form[i].checked;
+						}
+					}
+					return billingData;
+				};
+				var formObject = getFormData();
+				$.post('/cart/checkout02', {
+					data: JSON.stringify(formObject),
+					dataType: 'json',
+					success: function(data) {
+						window.location = '/cart/checkout02'
+					}
+				});
 			} else {
 				if (!$checkout01.find('.help-block')[0]) {
 					$('button, input[type="button"]').blur();
 					var formGroup = $('#checkout01-form').find('#email');
 					var formParent = formGroup.parent();
 					formParent.addClass('has-warning');
-					formParent.append('<span class="help-block">Please correct your email address</span>');
-				} else {
-					$('button, input[type="button"]').blur();
+					formParent.append('<span class="help-block">Please enter a valid email address</span>');
+					checkEmailAgain = true;
 				}
 			}
 		});

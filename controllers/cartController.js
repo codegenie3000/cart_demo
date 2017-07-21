@@ -93,6 +93,7 @@ exports.remove_product = function(req, res, next) {
 };
 
 exports.change_qty = function(req, res, next) {
+	// TODO sanitize data
 	var itemObj = JSON.parse(req.body.data);
 	var sessionArray = req.session.itemQty;
 	for (var i = 0; i < sessionArray.length; i++) {
@@ -108,8 +109,13 @@ exports.change_qty = function(req, res, next) {
 	});
 };
 
-exports.check_out = function(req, res, next) {
+exports.check_out01 = function(req, res, next) {
 	res.render('checkout01', {
 		pageName: 'Shipping Address'
 	});
+};
+
+exports.check_out_02_post = function(req, res, next) {
+	var billingAddress = JSON.parse(req.body.data);
+	
 };
