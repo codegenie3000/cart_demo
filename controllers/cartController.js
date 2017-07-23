@@ -116,6 +116,7 @@ exports.check_out01 = function(req, res, next) {
 };
 
 exports.check_out_02_post = function(req, res, next) {
+	
 	var billingAddress = JSON.parse(req.body.data);
 	
 };
