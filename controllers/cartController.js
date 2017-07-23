@@ -115,8 +115,51 @@ exports.check_out01 = function(req, res, next) {
 	});
 };
 
-exports.check_out_02_post = function(req, res, next) {
+exports.check_out_01_post = function(req, res, next) {
+	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
+	req.sanitize('billingAddress');
 	
-	var billingAddress = JSON.parse(req.body.data);
+	function safeJSONObject(JSONString, propArray, maxLength) {
+		var parsedObj, safeObj = {};
+		try {
+			if (maxLength && JSONString.length > maxLength) {
+				return null;
+			} else {
+				parsedObj = JSON.parse(JSONString);
+				if (typeof parsedObj !== 'object' || Array.isArray(parsedObj)) {
+					safeObj = parsedObj;
+				} else {
+					propArray.forEach(function (prop) {
+						if (parsedObj.hasOwnProperty(prop)) {
+							safeObj[prop] = parsedObj[prop];
+						}
+					});
+				}
+			}
+			return safeObj;
+		} catch(e) {
+			return null;
+		}
+	}
 	
+	var propertiesToCheck = ['email', 'address1', 'address2', 'city', 'state', 'zip', 'phone', 'bill-same-as-ship'];
+	var maxLength = 500;
+	
+	var addressObj = safeJSONObject(req.body.data, propertiesToCheck, maxLength);
+	
+	var sameAsShipping = addressObj['bill-same-as-ship'];
+	delete addressObj['bill-same-as-ship'];
+	
+	var sess = req.session;
+	sess.billingAddress = addressObj;
+	sess.sameAsShipping = sameAsShipping;
+	
+	if (sameAsShipping) {
+		sess.shippingAddress = addressObj;
+	}
+	req.session.save(function (err) {
+		if (err)
+			return next(err);
+		res.redirect('/checkout02');
+	});
 };

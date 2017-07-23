@@ -94,11 +94,12 @@ $(document).ready(function() {
 					return billingData;
 				};
 				var formObject = getFormData();
-				$.post('/cart/checkout02', {
+				$.post('/cart/checkout01_post', {
 					data: JSON.stringify(formObject),
 					dataType: 'json',
 					success: function(data) {
-						window.location = '/cart/checkout02'
+						// window.location = '/cart/checkout02'
+						console.log('success');
 					}
 				});
 			} else {

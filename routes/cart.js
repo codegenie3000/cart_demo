@@ -17,7 +17,7 @@ router.get('/checkout01', cartController.check_out01);
 
 router.post('/change_qty', cartController.change_qty);
 
-router.post('/checkout02', cartController.check_out_02_post);
+router.post('/checkout01_post', cartController.check_out_01_post);
 
 router.get('/remove/:id', cartController.remove_product);
 
