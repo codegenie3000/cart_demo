@@ -20,10 +20,10 @@ exports.index = function(req, res, next) {
 			Product.find({
 				_id: {$in: itemsInCart}
 			}, function(err, catalogItems) {
-				
+
 				var mergedCartItems = (function() {
 					var merged = [];
-					
+
 					for (var i = 0; i < catalogItems.length; i++) {
 						cartItems.forEach(function(cartItem) {
 							if (cartItem.itemId === catalogItems[i].id) {
@@ -38,11 +38,11 @@ exports.index = function(req, res, next) {
 				var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
 					return prevVal + (elem.qty * elem.price);
 				},0);
-				
+
 				var shipping = (subTotal * 0.2);
-				
+
 				var total = subTotal + shipping;
-				
+
 				//TODO create regex and convert number to decimal and comma format
 				console.log('ran with calc', subTotal.toString());
 				res.render('cart', {
@@ -70,6 +70,23 @@ exports.index = function(req, res, next) {
 	}
 };
 
+exports.change_qty = function(req, res, next) {
+	// TODO sanitize data
+	var itemObj = JSON.parse(req.body.data);
+	var sessionArray = req.session.itemQty;
+	for (var i = 0; i < sessionArray.length; i++) {
+		if (sessionArray[i].itemId === itemObj.itemId) {
+			sessionArray[i].qty = parseInt(itemObj.qty);
+		}
+	}
+	req.session.save(function (err) {
+		if (err)
+			return next(err);
+		console.log('ran');
+		res.send({status: 'success'});
+	});
+};
+
 exports.remove_product = function(req, res, next) {
 	var productId = req.params.id;
 	var itemQtyArr = req.session.itemQty;
@@ -92,33 +109,10 @@ exports.remove_product = function(req, res, next) {
 	// res.redirect('/');
 };
 
-exports.change_qty = function(req, res, next) {
-	// TODO sanitize data
-	var itemObj = JSON.parse(req.body.data);
-	var sessionArray = req.session.itemQty;
-	for (var i = 0; i < sessionArray.length; i++) {
-		if (sessionArray[i].itemId === itemObj.itemId) {
-			sessionArray[i].qty = parseInt(itemObj.qty);
-		}
-	}
-	req.session.save(function (err) {
-		if (err)
-			return next(err);
-		console.log('ran');
-		res.send({status: 'success'});
-	});
-};
-
-exports.check_out01 = function(req, res, next) {
-	res.render('checkout01', {
-		pageName: 'Shipping Address'
-	});
-};
-
-exports.check_out_01_post = function(req, res, next) {
+exports.check_out01_post = function(req, res, next) {
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
-	
+
 	function safeJSONObject(JSONString, propArray, maxLength) {
 		var parsedObj, safeObj = {};
 		try {
@@ -141,25 +135,37 @@ exports.check_out_01_post = function(req, res, next) {
 			return null;
 		}
 	}
-	
+
 	var propertiesToCheck = ['email', 'address1', 'address2', 'city', 'state', 'zip', 'phone', 'bill-same-as-ship'];
 	var maxLength = 500;
-	
+
 	var addressObj = safeJSONObject(req.body.data, propertiesToCheck, maxLength);
-	
+
 	var sameAsShipping = addressObj['bill-same-as-ship'];
 	delete addressObj['bill-same-as-ship'];
-	
+
 	var sess = req.session;
 	sess.billingAddress = addressObj;
 	sess.sameAsShipping = sameAsShipping;
-	
+
 	if (sameAsShipping) {
 		sess.shippingAddress = addressObj;
 	}
 	req.session.save(function (err) {
 		if (err)
 			return next(err);
-		res.redirect('/checkout02');
+		res.json({'success': 'yes'});
+	});
+};
+
+exports.check_out01 = function(req, res, next) {
+	res.render('checkout01', {
+		pageName: 'Billing Address'
+	});
+};
+
+exports.check_out02 = function(req, res, next) {
+	res.render('checkout02', {
+		pageName: 'Shipping Address'
 	});
 };
