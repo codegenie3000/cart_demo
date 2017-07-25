@@ -94,15 +94,27 @@ $(document).ready(function() {
 					return billingData;
 				};
 				var formObject = getFormData();
-				$.post('/cart/checkout01', {
+				$.ajax('/cart/checkout01/next', {
+					method: 'POST',
+					data: {data: formObject},
+					dataType: 'text',
+					error: function() {
+						window.alert('There was an error. Please try again');
+					},
+					success: function(data) {
+						debugger;
+						window.location = '/cart/checkout02';
+					}
+				});
+				/*$.post('/cart/checkout01/next', {
 					data: JSON.stringify(formObject),
 					dataType: 'json',
 					success: function(data) {
-						// console.log('success');
-						window.location = '/cart/checkout02';
+					    console.log('success');
+					    window.location = '/cart/checkout02';
 
 					}
-				});
+				});*/
 			} else {
 				if (!$checkout01.find('.help-block')[0]) {
 					$('button, input[type="button"]').blur();

@@ -112,6 +112,7 @@ exports.remove_product = function(req, res, next) {
 exports.check_out01_post = function(req, res, next) {
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
+	console.log('received post');
 
 	function safeJSONObject(JSONString, propArray, maxLength) {
 		var parsedObj, safeObj = {};
@@ -152,9 +153,11 @@ exports.check_out01_post = function(req, res, next) {
 		sess.shippingAddress = addressObj;
 	}
 	req.session.save(function (err) {
+		console.log('saved');
 		if (err)
 			return next(err);
-		res.json({'success': 'yes'});
+
+		// res.json({'success': 'yes'});
 	});
 };
 

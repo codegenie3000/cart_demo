@@ -13,9 +13,10 @@ const cartController = require('../controllers/cartController');
 
 router.get('/', cartController.index);
 
+router.post('/checkout01/next', cartController.check_out01_post);
+
 router.post('/change_qty', cartController.change_qty);
 
-router.post('/checkout01', cartController.check_out01_post);
 
 router.get('/checkout01', cartController.check_out01);
 
