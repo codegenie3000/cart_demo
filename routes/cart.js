@@ -13,14 +13,17 @@ const cartController = require('../controllers/cartController');
 
 router.get('/', cartController.index);
 
-router.post('/checkout01/next', cartController.check_out01_post);
+router.put('/change_qty', cartController.change_qty);
 
-router.post('/change_qty', cartController.change_qty);
-
+router.post('/checkout01/submit', cartController.check_out01_post);
 
 router.get('/checkout01', cartController.check_out01);
 
+router.post('/checkout02/submit', cartController.checkout02Post);
+
 router.get('/checkout02', cartController.check_out02);
+
+router.get('/checkout03', cartController.checkout03);
 
 router.get('/remove/:id', cartController.remove_product);
 

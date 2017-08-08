@@ -9,8 +9,11 @@
 
 var Product = require('../models/product');
 
+var ControllerHelpers = require('./controllerHelpers');
+
 exports.index = function(req, res, next) {
 	if (req.session.itemQty) {
+		//TODO convert into modules
 		var cartItems = req.session.itemQty;
 		var itemsInCart = [];
 		if (cartItems) {
@@ -72,7 +75,9 @@ exports.index = function(req, res, next) {
 
 exports.change_qty = function(req, res, next) {
 	// TODO sanitize data
-	var itemObj = JSON.parse(req.body.data);
+	// var itemObj = JSON.parse(req.body.data);
+	// var sessionArray = req.session.itemQty;
+	var itemObj = req.body;
 	var sessionArray = req.session.itemQty;
 	for (var i = 0; i < sessionArray.length; i++) {
 		if (sessionArray[i].itemId === itemObj.itemId) {
@@ -82,7 +87,6 @@ exports.change_qty = function(req, res, next) {
 	req.session.save(function (err) {
 		if (err)
 			return next(err);
-		console.log('ran');
 		res.send({status: 'success'});
 	});
 };
@@ -112,15 +116,14 @@ exports.remove_product = function(req, res, next) {
 exports.check_out01_post = function(req, res, next) {
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
-	console.log('received post');
 
-	function safeJSONObject(JSONString, propArray, maxLength) {
+	/*function safeJSONObject(JSONString, propArray, maxLength) {
 		var parsedObj, safeObj = {};
 		try {
 			if (maxLength && JSONString.length > maxLength) {
 				return null;
 			} else {
-				parsedObj = JSON.parse(JSONString);
+				parsedObj = JSONString;
 				if (typeof parsedObj !== 'object' || Array.isArray(parsedObj)) {
 					safeObj = parsedObj;
 				} else {
@@ -135,29 +138,59 @@ exports.check_out01_post = function(req, res, next) {
 		} catch(e) {
 			return null;
 		}
+	}*/
+
+	//TODO convert to module
+	function safeJSONObject(postObject, propArray) {
+		var safeObj = {};
+		try {
+			propArray.forEach(function(prop) {
+				if (postObject.hasOwnProperty(prop)) {
+					safeObj[prop] = postObject[prop];
+				}
+			});
+			return safeObj;
+		} catch (e) {
+			return null;
+		}
 	}
 
-	var propertiesToCheck = ['email', 'address1', 'address2', 'city', 'state', 'zip', 'phone', 'bill-same-as-ship'];
-	var maxLength = 500;
+	var propertiesToCheck = ['email', 'name', 'address1', 'address2', 'city', 'state', 'zip', 'phone', 'bill-same-as-ship'];
 
-	var addressObj = safeJSONObject(req.body.data, propertiesToCheck, maxLength);
+	var billingAddressObj = safeJSONObject(req.body, propertiesToCheck);
 
-	var sameAsShipping = addressObj['bill-same-as-ship'];
-	delete addressObj['bill-same-as-ship'];
+	var isBillingShippingSame = (function() {
+		var isSame = (billingAddressObj['bill-same-as-ship']);
+		delete billingAddressObj['bill-same-as-ship'];
+		return isSame;
+	})();
 
-	var sess = req.session;
-	sess.billingAddress = addressObj;
-	sess.sameAsShipping = sameAsShipping;
+	var sessRef = req.session;
 
-	if (sameAsShipping) {
-		sess.shippingAddress = addressObj;
+	sessRef.billingAddress = billingAddressObj;
+
+	if (isBillingShippingSame) {
+		var addressWithoutEmail = {};
+		(function removeEmail() {
+			for (var prop in billingAddressObj) {
+				if (billingAddressObj.hasOwnProperty(prop) && prop !== 'email') {
+					addressWithoutEmail[prop] = billingAddressObj[prop];
+				}
+			}
+		})();
+		sessRef.shippingAddress = addressWithoutEmail;
 	}
+
+	//TODO convert to module?
 	req.session.save(function (err) {
 		console.log('saved');
 		if (err)
 			return next(err);
 
-		// res.json({'success': 'yes'});
+		var checkout02URL = '/cart/checkout02';
+		var checkout03URL = '/cart/checkout03';
+
+		isBillingShippingSame ? res.send(checkout03URL) : res.send(checkout02URL);
 	});
 };
 
@@ -172,3 +205,124 @@ exports.check_out02 = function(req, res, next) {
 		pageName: 'Shipping Address'
 	});
 };
+
+exports.checkout02Post = function(req, res, next) {
+	req.checkBody('shippingAddress', 'shipping address must be received').notEmpty();
+	req.sanitize('shippingAddress');
+
+	//TODO Create this as a module to export/import later
+	function createShippingObject (requestBody, propArray) {
+		var safeObj = {};
+		try {
+			propArray.forEach(function(prop) {
+				if (requestBody.hasOwnProperty(prop)) {
+					safeObj[prop] = requestBody[prop];
+				}
+				return safeObj;
+			});
+		} catch (e) {
+			return null;
+		}
+	}
+	var propertiesToCheck = ['name', 'address1', 'address2', 'city', 'state', 'zip', 'phone'];
+
+	var shippingAddress = createShippingObject(req.body, propertiesToCheck);
+
+	var sessRef = req.session;
+	sessRef.shippingAddress = shippingAddress;
+
+	// Create this as a module later
+	req.session.save(function (err) {
+		console.log('saved shipping address');
+		if (err) return next(err);
+
+		res.send('/cart/checkout03');
+	});
+};
+
+exports.checkout03 = function(req, res, next) {
+	// session.itemQty is array with [{itemId: ..., qty: 2}, {...}]
+
+	var addressFields = function () {
+		var sessRef = req.session;
+		var billingAddressRef = sessRef.billingAddress;
+		var shippingAddressRef = sessRef.shippingAddress;
+
+		var billingAddress = {
+			name: billingAddressRef.name,
+			address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
+			city: billingAddressRef.city,
+			state: billingAddressRef.state,
+			zip: billingAddressRef.zip,
+			phone: billingAddressRef.phone,
+			email: billingAddressRef.email
+		};
+		var shippingAddress = {
+			name: shippingAddressRef.name,
+			address: shippingAddressRef.address1 + ', ' + shippingAddressRef.address2,
+			city: shippingAddressRef.city,
+			state: shippingAddressRef.state,
+			zip: shippingAddressRef.zip,
+			phone: shippingAddressRef.phone
+		};
+
+		return {
+			billing: billingAddress,
+			shipping: shippingAddress
+		}
+	};
+	var formFields = addressFields();
+
+	res.render('checkout03', {
+		billingAddress: formFields.billing,
+		shippingAddress: formFields.shipping,
+		pageName: 'Verify Information'
+	});
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
