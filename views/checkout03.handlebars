@@ -13,7 +13,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="panel panel-default">
-						<div class="panel-heading">Billing Information <a href="#">edit</a></div>
+						<div class="panel-heading">Billing Information <a href="/cart/checkout01">edit</a></div>
 						<div class="panel-body">
 							{{#with billingAddress}}
 								Name: {{name}}<br>
@@ -27,7 +27,7 @@
 				</div>
 				<div class="col-sm-12">
 					<div class="panel panel-default">
-						<div class="panel-heading">Shipping Information <a href="#">edit</a></div>
+						<div class="panel-heading">Shipping Information <a href="/cart/checkout02">edit</a></div>
 						<div class="panel-body">
 							{{#with shippingAddress}}
 								Name: {{name}}<br>
@@ -43,21 +43,33 @@
 		<div class="col-sm-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Cart <a href="#">edit</a>
+					Cart <a href="/cart">edit</a>
 				</div>
 				<div class="panel-body">
-					<div class="left-align-summary">Item 1 (2)</div>
-					<div class="right-align-summary">100.00</div>
+					<!--<div class="col-sm-6 text-left">Item 1 (2)</div>
+					<div class="col-sm-6 text-right">100.00</div>
 					<hr>
-					<div class="left-align-summary">Total:</div><span class="right-align-summary">$100.00</span>
+					<div class="col-sm-6 text-left">Total:</div>
+					<div class="col-sm-6 text-right">100.00</div>-->
+					{{#each cartItem}}
+						<div class="row">
+							<div class="col-sm-6 text-left">{{title}} ({{qty}})</div>
+							<div class="col-sm-6 text-right">{{lineTotal}}</div>
+						</div>
+					{{/each}}
+					<hr>
+					<div class="row">
+						<div class="col-sm-6 text-left">Shipping: {{shipping}}</div>
+						<div class="col-sm-6 text-right">Total: {{total}}</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-12">
-			<button class="btn btn-default">Back</button>
-			<button class="btn btn-primary">Next</button>
+			<a href="/cart/checkout02" class="btn btn-default">Back</a>
+			<a href="cart/checkout04"><button class="btn btn-primary">Next</button></a>
 		</div>
 	</div>
 </div>

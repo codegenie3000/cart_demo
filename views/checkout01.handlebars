@@ -8,30 +8,29 @@
             <h1>Checkout - Billing Address</h1>
         </div>
     </div>
-
     <form class="form-horizontal" id="checkout01-form">
 	    <div class="form-group">
 		    <label for="name" class="col-sm-2 control-label">Name</label>
 		    <div class="col-sm-10">
-			    <input type="text" class="form-control col-sm-10 required" id="name" placeholder="John Smith" required>
+			    <input type="text" class="form-control col-sm-10 required" id="name" placeholder="John Smith" required value="{{name}}">
 		    </div>
 	    </div>
         <div class="form-group">
             <label for="email" class="col-sm-2 control-label">Email*</label>
             <div class="col-sm-10">
-                <input type="email" class="form-control col-sm-10 required" id="email" placeholder="Email" required>
+                <input type="email" class="form-control col-sm-10 required" id="email" placeholder="Email" required value="{{email}}">
             </div>
         </div>
         <div class="form-group">
             <label for="address1" class="col-sm-2 control-label">Address 1*</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control col-sm-10 required" id="address1" placeholder="1 Main St." required>
+                <input type="text" class="form-control col-sm-10 required" id="address1" placeholder="1 Main St." required value="{{address1}}">
             </div>
         </div>
         <div class="form-group">
             <label for="address2" class="col-sm-2 control-label">Address 2</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control col-sm-10" id="address2" placeholder="Unit A">
+                <input type="text" class="form-control col-sm-10" id="address2" placeholder="Unit A" value="{{address2}}">
             </div>
         </div>
 
@@ -41,67 +40,19 @@
                 <div class="form-inline">
                     <div class="form-group">
                         <label for="city" class="control-label sr-only">City*</label>
-                        <input type="text" class="form-control col-sm-2 required" id="city" placeholder="City" required>
+                        <input type="text" class="form-control col-sm-2 required" id="city" placeholder="City" required value="{{city}}">
                     </div>
                     <div class="form-group">
                         <label for="state" class="control-label sr-only">State*</label>
                         <select class="form-control" id="state">
-                            <option value="AL">AL</option>
-                            <option value="AK">AK</option>
-                            <option value="AR">AR</option>
-                            <option value="AZ">AZ</option>
-                            <option value="CA">CA</option>
-                            <option value="CO">CO</option>
-                            <option value="CT">CT</option>
-                            <option value="DC">DC</option>
-                            <option value="DE">DE</option>
-                            <option value="FL">FL</option>
-                            <option value="GA">GA</option>
-                            <option value="HI">HI</option>
-                            <option value="IA">IA</option>
-                            <option value="ID">ID</option>
-                            <option value="IL">IL</option>
-                            <option value="IN">IN</option>
-                            <option value="KS">KS</option>
-                            <option value="KY">KY</option>
-                            <option value="LA">LA</option>
-                            <option value="MA">MA</option>
-                            <option value="MD">MD</option>
-                            <option value="ME">ME</option>
-                            <option value="MI">MI</option>
-                            <option value="MN">MN</option>
-                            <option value="MO">MO</option>
-                            <option value="MS">MS</option>
-                            <option value="MT">MT</option>
-                            <option value="NC">NC</option>
-                            <option value="NE">NE</option>
-                            <option value="NH">NH</option>
-                            <option value="NJ">NJ</option>
-                            <option value="NM">NM</option>
-                            <option value="NV">NV</option>
-                            <option value="NY">NY</option>
-                            <option value="ND">ND</option>
-                            <option value="OH">OH</option>
-                            <option value="OK">OK</option>
-                            <option value="OR">OR</option>
-                            <option value="PA">PA</option>
-                            <option value="RI">RI</option>
-                            <option value="SC">SC</option>
-                            <option value="SD">SD</option>
-                            <option value="TN">TN</option>
-                            <option value="TX">TX</option>
-                            <option value="UT">UT</option>
-                            <option value="VT">VT</option>
-                            <option value="VA">VA</option>
-                            <option value="WA">WA</option>
-                            <option value="WI">WI</option>
-                            <option value="WV">WV</option>
-                            <option value="WY">WY</option>
+	                        {{#each stateList}}
+		                        <option value="{{abbrev}}" {{selectState abbrev}}>{{stateName}}</option>
+	                        {{/each}}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="zip" class="control-label sr-only">Zip code*</label>
-                        <input type="text" class="form-control required" id="zip" placeholder="Zip" maxlength="10" required>
+                        <input type="text" class="form-control required" id="zip" placeholder="Zip" maxlength="10" required value="{{zip}}">
                     </div>
                 </div>
             </div>
@@ -110,7 +61,7 @@
         <div class="form-group">
             <label for="phone" class="col-sm-2 control-label">Phone*</label>
             <div class="col-sm-3">
-                <input type="tel" class="form-control required" id="phone" maxlength="10">
+                <input type="text" class="form-control required" id="phone" maxlength="15" value="{{phone}}">
             </div>
         </div>
         <div class="form-group">

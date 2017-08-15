@@ -16,7 +16,8 @@ exports.index = function(req, res, next) {
 		//TODO convert into modules
 		var cartItems = req.session.itemQty;
 		var itemsInCart = [];
-		if (cartItems) {
+
+		if (cartItems.length > 0) {
 			itemsInCart = cartItems.map(function (item) {
 				return item.itemId;
 			});
@@ -60,9 +61,65 @@ exports.index = function(req, res, next) {
 					pageName: 'Your cart'
 				});
 			});
+		} else {
+			res.render('cart', {
+				itemsInCart: false,
+				general: {
+					cart: true
+				},
+				pageName: 'Your cart'
+			});
 		}
+
+
+		/*
+				if (cartItems) {
+					itemsInCart = cartItems.map(function (item) {
+						return item.itemId;
+					});
+					Product.find({
+						_id: {$in: itemsInCart}
+					}, function(err, catalogItems) {
+
+						var mergedCartItems = (function() {
+							var merged = [];
+
+							for (var i = 0; i < catalogItems.length; i++) {
+								cartItems.forEach(function(cartItem) {
+									if (cartItem.itemId === catalogItems[i].id) {
+										catalogItems[i]['qty'] = cartItem.qty;
+										merged.push(catalogItems[i]);
+									}
+								});
+							}
+							return merged;
+						})();
+
+						var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+							return prevVal + (elem.qty * elem.price);
+						},0);
+
+						var shipping = (subTotal * 0.2);
+
+						var total = subTotal + shipping;
+
+						//TODO create regex and convert number to decimal and comma format
+						console.log('ran with calc', subTotal.toString());
+						res.render('cart', {
+							itemsInCart: true,
+							cartItems: mergedCartItems,
+							subTotal: subTotal.toString(),
+							shipping: shipping.toString(),
+							total: total.toString(),
+							general: {
+								cart: true
+							},
+							pageName: 'Your cart'
+						});
+					});
+				}
+		*/
 	} else {
-		console.log('ran no calc');
 		res.render('cart', {
 			itemsInCart: false,
 			general: {
@@ -195,15 +252,53 @@ exports.check_out01_post = function(req, res, next) {
 };
 
 exports.check_out01 = function(req, res, next) {
-	res.render('checkout01', {
-		pageName: 'Billing Address'
-	});
+	var stateArray = ControllerHelpers.stateList;
+	var sessRef = req.session;
+	if (sessRef.billingAddress) {
+		var billingAddress = sessRef.billingAddress;
+
+		res.render('checkout01', {
+			pageName: 'Billing Address',
+			stateList: stateArray,
+			selectedState: billingAddress.state,
+			name: billingAddress.name,
+			email: billingAddress.email,
+			address1: billingAddress.address1,
+			address2: billingAddress.address2,
+			city: billingAddress.city,
+			zip: billingAddress.zip,
+			phone: billingAddress.phone
+		});
+	} else {
+		res.render('checkout01', {
+			pageName: 'Billing Address',
+			stateList: stateArray
+		});
+	}
 };
 
 exports.check_out02 = function(req, res, next) {
-	res.render('checkout02', {
-		pageName: 'Shipping Address'
-	});
+	var stateArray = ControllerHelpers.stateList;
+	var sessRef = req.session;
+	if (sessRef.shippingAddress) {
+		var shippingAddress = sessRef.shippingAddress;
+		res.render('checkout02', {
+			pageName: 'Shipping Address',
+			stateList: stateArray,
+			selectedState: shippingAddress.state,
+			name: shippingAddress.name,
+			address1: shippingAddress.address1,
+			address2: shippingAddress.address2,
+			city: shippingAddress.city,
+			zip: shippingAddress.zip,
+			phone: shippingAddress.phone
+		});
+	} else {
+		res.render('checkout02', {
+			pageName: 'Shipping Address',
+			stateList: stateArray
+		});
+	}
 };
 
 exports.checkout02Post = function(req, res, next) {
@@ -218,8 +313,8 @@ exports.checkout02Post = function(req, res, next) {
 				if (requestBody.hasOwnProperty(prop)) {
 					safeObj[prop] = requestBody[prop];
 				}
-				return safeObj;
 			});
+			return safeObj;
 		} catch (e) {
 			return null;
 		}
@@ -242,42 +337,51 @@ exports.checkout02Post = function(req, res, next) {
 
 exports.checkout03 = function(req, res, next) {
 	// session.itemQty is array with [{itemId: ..., qty: 2}, {...}]
+	if (req.session) {
+		var addressFields = (function () {
+			var sessRef = req.session;
+			var billingAddressRef = sessRef.billingAddress;
+			var shippingAddressRef = sessRef.shippingAddress;
 
-	var addressFields = function () {
-		var sessRef = req.session;
-		var billingAddressRef = sessRef.billingAddress;
-		var shippingAddressRef = sessRef.shippingAddress;
+			var billingAddress = {
+				name: billingAddressRef.name,
+				address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
+				city: billingAddressRef.city,
+				state: billingAddressRef.state,
+				zip: billingAddressRef.zip,
+				phone: billingAddressRef.phone,
+				email: billingAddressRef.email
+			};
+			var shippingAddress = {
+				name: shippingAddressRef.name,
+				address: shippingAddressRef.address1 + ', ' + shippingAddressRef.address2,
+				city: shippingAddressRef.city,
+				state: shippingAddressRef.state,
+				zip: shippingAddressRef.zip,
+				phone: shippingAddressRef.phone
+			};
 
-		var billingAddress = {
-			name: billingAddressRef.name,
-			address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
-			city: billingAddressRef.city,
-			state: billingAddressRef.state,
-			zip: billingAddressRef.zip,
-			phone: billingAddressRef.phone,
-			email: billingAddressRef.email
-		};
-		var shippingAddress = {
-			name: shippingAddressRef.name,
-			address: shippingAddressRef.address1 + ', ' + shippingAddressRef.address2,
-			city: shippingAddressRef.city,
-			state: shippingAddressRef.state,
-			zip: shippingAddressRef.zip,
-			phone: shippingAddressRef.phone
-		};
+			return {
+				billing: billingAddress,
+				shipping: shippingAddress
+			}
+		})();
 
-		return {
-			billing: billingAddress,
-			shipping: shippingAddress
+		var cart = req.session.itemQty;
+
+		ControllerHelpers.cart.cartItemTotal(cart, renderCartTotal);
+
+		function renderCartTotal(cartTotalsObj) {
+			res.render('checkout03', {
+				billingAddress: addressFields.billing,
+				shippingAddress: addressFields.shipping,
+				pageName: 'Verify Information',
+				cartItem: cartTotalsObj.cartItems,
+				shipping: cartTotalsObj.shipping,
+				total: cartTotalsObj.total
+			});
 		}
-	};
-	var formFields = addressFields();
-
-	res.render('checkout03', {
-		billingAddress: formFields.billing,
-		shippingAddress: formFields.shipping,
-		pageName: 'Verify Information'
-	});
+	}
 };
 
 
