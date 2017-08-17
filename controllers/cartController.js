@@ -384,6 +384,10 @@ exports.checkout03 = function(req, res, next) {
 	}
 };
 
+exports.checkout04 = function(req, res, next) {
+
+};
+
 
 
 

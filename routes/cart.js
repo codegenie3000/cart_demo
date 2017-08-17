@@ -25,6 +25,8 @@ router.get('/checkout02', cartController.check_out02);
 
 router.get('/checkout03', cartController.checkout03);
 
+router.get('/checkout04', cartController.checkout04);
+
 router.get('/remove/:id', cartController.remove_product);
 
 module.exports = router;
