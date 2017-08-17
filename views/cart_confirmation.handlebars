@@ -13,7 +13,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="panel panel-default">
-						<div class="panel-heading">Billing Information <a href="/cart/checkout01">edit</a></div>
+						<div class="panel-heading">Billing Information <a href="/cart/billing">edit</a></div>
 						<div class="panel-body">
 							{{#with billingAddress}}
 								Name: {{name}}<br>
@@ -27,7 +27,7 @@
 				</div>
 				<div class="col-sm-12">
 					<div class="panel panel-default">
-						<div class="panel-heading">Shipping Information <a href="/cart/checkout02">edit</a></div>
+						<div class="panel-heading">Shipping Information <a href="/cart/shipping">edit</a></div>
 						<div class="panel-body">
 							{{#with shippingAddress}}
 								Name: {{name}}<br>
@@ -68,8 +68,8 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-12">
-			<a href="/cart/checkout02" class="btn btn-default">Back</a>
-			<a href="cart/checkout04"><button class="btn btn-primary">Next</button></a>
+			<a href="/cart/billing" class="btn btn-default">Back</a>
+			<a href="/cart/payment"><button class="btn btn-primary">Next</button></a>
 		</div>
 	</div>
 </div>

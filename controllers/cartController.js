@@ -170,7 +170,7 @@ exports.remove_product = function(req, res, next) {
 	// res.redirect('/');
 };
 
-exports.check_out01_post = function(req, res, next) {
+exports.submitBillingData = function(req, res, next) {
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
 
@@ -244,14 +244,14 @@ exports.check_out01_post = function(req, res, next) {
 		if (err)
 			return next(err);
 
-		var checkout02URL = '/cart/checkout02';
-		var checkout03URL = '/cart/checkout03';
+		var checkout02URL = '/cart/shipping';
+		var checkout03URL = '/cart/confirmation';
 
 		isBillingShippingSame ? res.send(checkout03URL) : res.send(checkout02URL);
 	});
 };
 
-exports.check_out01 = function(req, res, next) {
+exports.billing = function(req, res, next) {
 	var stateArray = ControllerHelpers.stateList;
 	var sessRef = req.session;
 	if (sessRef.billingAddress) {
@@ -277,7 +277,7 @@ exports.check_out01 = function(req, res, next) {
 	}
 };
 
-exports.check_out02 = function(req, res, next) {
+exports.shipping = function(req, res, next) {
 	var stateArray = ControllerHelpers.stateList;
 	var sessRef = req.session;
 	if (sessRef.shippingAddress) {
@@ -301,7 +301,7 @@ exports.check_out02 = function(req, res, next) {
 	}
 };
 
-exports.checkout02Post = function(req, res, next) {
+exports.submitShippingData = function(req, res, next) {
 	req.checkBody('shippingAddress', 'shipping address must be received').notEmpty();
 	req.sanitize('shippingAddress');
 
@@ -331,11 +331,11 @@ exports.checkout02Post = function(req, res, next) {
 		console.log('saved shipping address');
 		if (err) return next(err);
 
-		res.send('/cart/checkout03');
+		res.send('/cart/confirmation');
 	});
 };
 
-exports.checkout03 = function(req, res, next) {
+exports.checkoutConfirmation = function(req, res, next) {
 	// session.itemQty is array with [{itemId: ..., qty: 2}, {...}]
 	if (req.session) {
 		var addressFields = (function () {
@@ -384,8 +384,26 @@ exports.checkout03 = function(req, res, next) {
 	}
 };
 
-exports.checkout04 = function(req, res, next) {
+exports.payment = function(req, res, next) {
+	if (req.session) {
+		var addressFields = (function() {
+			var sessRef = req.session;
+			var billingAddressRef = sessRef.billingAddress;
 
+			return {
+				name: billingAddressRef.name,
+				address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
+				city: billingAddressRef.city,
+				state: billingAddressRef.state,
+				zip: billingAddressRef.zip,
+				phone: billingAddressRef.phone,
+				email: billingAddressRef.email
+			};
+		})();
+	}
+	res.render('card_entry', {
+		billingAddress: addressFields
+	});
 };
 
 

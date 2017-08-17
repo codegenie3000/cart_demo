@@ -15,17 +15,17 @@ router.get('/', cartController.index);
 
 router.put('/change_qty', cartController.change_qty);
 
-router.post('/checkout01/submit', cartController.check_out01_post);
+router.post('/billing/submit', cartController.submitBillingData);
 
-router.get('/checkout01', cartController.check_out01);
+router.get('/billing', cartController.billing);
 
-router.post('/checkout02/submit', cartController.checkout02Post);
+router.post('/shipping/submit', cartController.submitShippingData);
 
-router.get('/checkout02', cartController.check_out02);
+router.get('/shipping', cartController.shipping);
 
-router.get('/checkout03', cartController.checkout03);
+router.get('/confirmation', cartController.checkoutConfirmation);
 
-router.get('/checkout04', cartController.checkout04);
+router.get('/payment', cartController.payment);
 
 router.get('/remove/:id', cartController.remove_product);
 
