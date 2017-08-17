@@ -257,7 +257,7 @@ exports.check_out01 = function(req, res, next) {
 	if (sessRef.billingAddress) {
 		var billingAddress = sessRef.billingAddress;
 
-		res.render('checkout01', {
+		res.render('billing_address', {
 			pageName: 'Billing Address',
 			stateList: stateArray,
 			selectedState: billingAddress.state,
@@ -270,7 +270,7 @@ exports.check_out01 = function(req, res, next) {
 			phone: billingAddress.phone
 		});
 	} else {
-		res.render('checkout01', {
+		res.render('billing_address', {
 			pageName: 'Billing Address',
 			stateList: stateArray
 		});
@@ -282,7 +282,7 @@ exports.check_out02 = function(req, res, next) {
 	var sessRef = req.session;
 	if (sessRef.shippingAddress) {
 		var shippingAddress = sessRef.shippingAddress;
-		res.render('checkout02', {
+		res.render('shipping_address', {
 			pageName: 'Shipping Address',
 			stateList: stateArray,
 			selectedState: shippingAddress.state,
@@ -294,7 +294,7 @@ exports.check_out02 = function(req, res, next) {
 			phone: shippingAddress.phone
 		});
 	} else {
-		res.render('checkout02', {
+		res.render('shipping_address', {
 			pageName: 'Shipping Address',
 			stateList: stateArray
 		});
@@ -372,7 +372,7 @@ exports.checkout03 = function(req, res, next) {
 		ControllerHelpers.cart.cartItemTotal(cart, renderCartTotal);
 
 		function renderCartTotal(cartTotalsObj) {
-			res.render('checkout03', {
+			res.render('cart_confirmation', {
 				billingAddress: addressFields.billing,
 				shippingAddress: addressFields.shipping,
 				pageName: 'Verify Information',
