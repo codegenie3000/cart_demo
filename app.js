@@ -11,10 +11,6 @@ var helpers = require('./lib/helpers');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-/*var dbURL = process.argv[2],
-	user = process.argv[3],
-	pw = process.argv[4];
-var dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;*/
 var dbURL = process.env.DB_HOST,
 	user = process.env.DB_USER,
 	pw = process.env.DB_PASS;
@@ -51,14 +47,6 @@ var hbs = exphbs.create({
 	]
 });
 
-// view engine setup
-/*app.engine('handlebars', exphbs({
-	defaultLayout: 'main',
-	helpers: 'helpers',
-	partialsDir: [
-		'views/partials/'
-	]
-}));*/
 app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
