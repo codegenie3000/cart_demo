@@ -77,8 +77,10 @@ exports.add_to_cart = function (req, res, next) {
 		sess.itemQty = [itemObject];
 	}
 	req.session.save(function (err) {
-		if (err)
+		if (err) {
 			return next(err);
-		res.redirect('/cart');
+		} else {
+			res.send('added to cart');
+		}
 	});
 };

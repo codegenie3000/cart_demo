@@ -7,7 +7,14 @@
  * Created by jonathan on 6/14/17.
  */
 
+// var keyPublishable = 'pk_test_7FDEq537OGNCurGLehNg2FcB';
+var keySecret = process.env.STRIPE_SECRET;
+
+var stripe = require('stripe')(keySecret);
+
 var Product = require('../models/product');
+
+var Orders = require('../models/order');
 
 var ControllerHelpers = require('./controllerHelpers');
 
@@ -371,15 +378,19 @@ exports.checkoutConfirmation = function(req, res, next) {
 
 		ControllerHelpers.cart.cartItemTotal(cart, renderCartTotal);
 
-		function renderCartTotal(cartTotalsObj) {
-			res.render('cart_confirmation', {
-				billingAddress: addressFields.billing,
-				shippingAddress: addressFields.shipping,
-				pageName: 'Verify Information',
-				cartItem: cartTotalsObj.cartItems,
-				shipping: cartTotalsObj.shipping,
-				total: cartTotalsObj.total
-			});
+		function renderCartTotal(error, cartTotalsObj) {
+			if (error) {
+				console.log(error);
+			} else {
+				res.render('cart_confirmation', {
+					billingAddress: addressFields.billing,
+					shippingAddress: addressFields.shipping,
+					pageName: 'Verify Information',
+					cartItem: cartTotalsObj.cartItems,
+					shipping: cartTotalsObj.shipping,
+					total: cartTotalsObj.total
+				});
+			}
 		}
 	}
 };
@@ -406,49 +417,75 @@ exports.payment = function(req, res, next) {
 	});
 };
 
+exports.stripePost = function(req, res, next) {
+	// Charge card
+	// Create transaction ID
+	// Create order with transaction ID - copy billing and shipping address, items & qty, and stripe reference to order
+	// Check if customer exists by querying email address
+	// If customer exists, associate current customer with Transaction ID
+	// If customer isn't found, create new customer and associate transaction ID with customer
 
+	req.sanitize('stripeToken');
+	var stripeToken = req.body.id;
 
+	function makeOrderId() {
+		var text = '';
+		var possible = '0123456789';
 
+		var min = Math.ceil(0);
+		var max = Math.floor(possible.length + 1);
 
+		for (var i = 0; i < 5; i++) {
+			text += Math.floor(Math.random() * (max - min)) + min;
+		}
+		return possible;
+	}
 
+	var session = req.session;
+	var cartItems = session.itemQty;
+	var billingAddress = session.billingAddress;
+	var shippingAddress = session.shippingAddress;
+	var orderId = makeOrderId();
 
+	ControllerHelpers.cart.cartItemTotal(cartItems, fetchTotals);
 
+	function fetchTotals(err, res) {
+		if (err) {
+			console.log(err);
+		} else {
+			var total = res.total;
+			stripe.charges.create({
+				amount: total * 100,
+				currency: 'usd',
+				description: 'callback charge',
+				source: stripeToken
+			}, function (err, charge) {
+				if (err) {
+					console.log(err);
+				} else {
+					res.send(charge);
+				}
+			});
+		}
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	function createCharge (error, totalsObj) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log(totalsObj);
+			stripe.charges.create({
+				amount: totalsObj.total * 10,
+				currency: 'usd',
+				description: 'order_charge',
+				source: stripeToken
+			}, function (err, charge) {
+				if (err) {
+					console.log(err);
+				} else {
+					res.send(charge);
+				}
+			});
+		}
+	}
+};

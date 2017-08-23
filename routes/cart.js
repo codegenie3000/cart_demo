@@ -17,6 +17,8 @@ router.put('/change_qty', cartController.change_qty);
 
 router.post('/billing/submit', cartController.submitBillingData);
 
+router.post('/stripeSubmit', cartController.stripePost);
+
 router.get('/billing', cartController.billing);
 
 router.post('/shipping/submit', cartController.submitShippingData);

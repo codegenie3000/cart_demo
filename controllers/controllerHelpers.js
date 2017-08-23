@@ -264,10 +264,10 @@ exports.cart = (function() {
 			var obj = {
 				itemsInCart: true,
 				cartItems: mergedCartItems,
-				shipping: shipping.toString(),
-				total: total.toString()
+				shipping: shipping,
+				total: total
 			};
-			callback(obj);
+			callback(null, obj);
 		});
 	};
 

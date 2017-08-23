@@ -30,7 +30,7 @@ var expressValidator = require('express-validator');
 
 // express-session
 var session = require('express-session');
-var stripe = require('stripe')(process.env.STRIPE_SECRET);
+// var stripe = require('stripe')(process.env.STRIPE_SECRET);
 
 var index = require('./routes/index');
 var products = require('./routes/products');
