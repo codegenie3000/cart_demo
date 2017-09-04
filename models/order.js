@@ -10,6 +10,7 @@ var Schema = mongoose.Schema;
 var OrderSchema = Schema(
 	{
 		orderId: {type: String, required: true, max: 5},
+		orderTimestamp: {type: Date, required: true, default: Date.now},
 		stripeTransactionId: {type: String, required: true, max: 20},
 		amountCharged: {type: Number, required: true},
 		billingAddress: {

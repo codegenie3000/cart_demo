@@ -381,53 +381,7 @@ exports.stripePost = function(req, res, next) {
 	var session = req.session;
 	var itemArray = session.itemQty;
 
-	findItemsAndTotals(itemArray, createStripeCharge);
-
-	function findItemsAndTotals (cartItemQtyArray) {
-		var itemsInCart = cartItemQtyArray.map(function (item) {
-			return item.itemId;
-		});
-
-		Product.find({
-			_id: {$in: itemsInCart}
-		}, function(err, catalogItems) {
-			if (err) return err;
-
-			var mergedCartItems = (function() {
-				var merged = [];
-
-				for (var i = 0; i < catalogItems.length; i++) {
-					cartItemQtyArray.forEach(function(cartItem) {
-						if (cartItem.itemId === catalogItems[i].id) {
-							var tempItem = {};
-							tempItem.qty = cartItem.qty.toString();
-							tempItem.price = catalogItems[i].price.toString();
-							tempItem.lineTotal = (catalogItems[i].price * cartItem.qty).toString();
-							tempItem.title = catalogItems[i].title;
-							merged.push(tempItem);
-						}
-					});
-				}
-				return merged;
-			})();
-
-			var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
-				return prevVal + (elem.qty * elem.price);
-			},0);
-
-			var shipping = (subTotal * 0.1);
-
-			var total = subTotal + shipping;
-
-			var totalsObj = {
-				itemsInCart: true,
-				cartItems: mergedCartItems,
-				shipping: shipping,
-				total: total
-			};
-			createStripeCharge(null, totalsObj);
-		});
-	}
+	ControllerHelpers.cart.cartItemTotal(itemArray, createStripeCharge);
 
 	function createStripeCharge (error, totalsObj) {
 		if (error) {
