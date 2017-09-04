@@ -80,7 +80,7 @@ exports.add_to_cart = function (req, res, next) {
 		if (err) {
 			return next(err);
 		} else {
-			res.send('added to cart');
+			res.send('/cart');
 		}
 	});
 };

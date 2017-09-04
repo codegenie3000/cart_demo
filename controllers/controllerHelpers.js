@@ -258,9 +258,6 @@ exports.cart = (function() {
 
 			var total = subTotal + shipping;
 
-			//TODO create regex and convert number to decimal and comma format
-			console.log('ran with calc', subTotal.toString());
-
 			var obj = {
 				itemsInCart: true,
 				cartItems: mergedCartItems,

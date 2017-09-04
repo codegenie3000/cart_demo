@@ -32,10 +32,10 @@ var OrderSchema = Schema(
 			phone: {type: String, required: true, max: 20}
 		},
 		shippingAmount: {type: Number, required: true},
-		salesTaxAmount: {type: Number, required: true},
+		// salesTaxAmount: {type: Number, required: true},
 		totalAmount: {type: Number, required: true},
 		items: [
-			{itemID: {type: String, required: true}},
+			{itemId: {type: String, required: true}},
 			{qty: {type: Number, required: true}}
 		]
 	}

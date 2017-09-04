@@ -22,7 +22,22 @@ var productDetail = {
 	addToCart: function() {
 		$('#add-to-cart').submit(function (e) {
 			console.log('ran');
-			var qtySelected = this[0].value;
+			var productClassName = this.classList[1];
+			var productId = /product-(\S+)/g.exec(productClassName)[1];
+			var qtySelected = {qtySelect: this[0].value};
+			var uri = '/product/' + productId;
+			$.ajax(uri, {
+				data: JSON.stringify(qtySelected),
+				method: 'POST',
+				contentType: 'application/json',
+				dataType: 'text',
+				success: function(data) {
+					window.location = data;
+				},
+				error: function(err){
+					console.log(err);
+				}
+			});
 		});
 	}
 };
@@ -41,10 +56,15 @@ var cart = {
 			}.bind(this))();
 
 			$.ajax('/cart/change_qty', {
-				data: itemQtyObject,
+				data: JSON.stringify(itemQtyObject),
+				contentType: 'application/json',
+				dataType: 'text',
 				method: 'PUT',
 				success: function(data) {
-					window.location = '/cart/'
+					window.location = data;
+				},
+				error: function(err) {
+					console.log(err);
 				}
 			});
 		});

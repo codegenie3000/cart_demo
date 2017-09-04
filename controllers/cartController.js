@@ -14,7 +14,7 @@ var stripe = require('stripe')(keySecret);
 
 var Product = require('../models/product');
 
-var Orders = require('../models/order');
+var Order = require('../models/order');
 
 var ControllerHelpers = require('./controllerHelpers');
 
@@ -77,55 +77,6 @@ exports.index = function(req, res, next) {
 				pageName: 'Your cart'
 			});
 		}
-
-
-		/*
-				if (cartItems) {
-					itemsInCart = cartItems.map(function (item) {
-						return item.itemId;
-					});
-					Product.find({
-						_id: {$in: itemsInCart}
-					}, function(err, catalogItems) {
-
-						var mergedCartItems = (function() {
-							var merged = [];
-
-							for (var i = 0; i < catalogItems.length; i++) {
-								cartItems.forEach(function(cartItem) {
-									if (cartItem.itemId === catalogItems[i].id) {
-										catalogItems[i]['qty'] = cartItem.qty;
-										merged.push(catalogItems[i]);
-									}
-								});
-							}
-							return merged;
-						})();
-
-						var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
-							return prevVal + (elem.qty * elem.price);
-						},0);
-
-						var shipping = (subTotal * 0.2);
-
-						var total = subTotal + shipping;
-
-						//TODO create regex and convert number to decimal and comma format
-						console.log('ran with calc', subTotal.toString());
-						res.render('cart', {
-							itemsInCart: true,
-							cartItems: mergedCartItems,
-							subTotal: subTotal.toString(),
-							shipping: shipping.toString(),
-							total: total.toString(),
-							general: {
-								cart: true
-							},
-							pageName: 'Your cart'
-						});
-					});
-				}
-		*/
 	} else {
 		res.render('cart', {
 			itemsInCart: false,
@@ -151,7 +102,7 @@ exports.change_qty = function(req, res, next) {
 	req.session.save(function (err) {
 		if (err)
 			return next(err);
-		res.send({status: 'success'});
+		res.send('/cart');
 	});
 };
 
@@ -418,9 +369,8 @@ exports.payment = function(req, res, next) {
 };
 
 exports.stripePost = function(req, res, next) {
-	// Charge card
 	// Create transaction ID
-	// Create order with transaction ID - copy billing and shipping address, items & qty, and stripe reference to order
+	// Create order with transaction ID - copy billing and shipping address, items & qty, totals, and stripe reference to order
 	// Check if customer exists by querying email address
 	// If customer exists, associate current customer with Transaction ID
 	// If customer isn't found, create new customer and associate transaction ID with customer
@@ -428,62 +378,122 @@ exports.stripePost = function(req, res, next) {
 	req.sanitize('stripeToken');
 	var stripeToken = req.body.id;
 
-	function makeOrderId() {
-		var text = '';
-		var possible = '0123456789';
-
-		var min = Math.ceil(0);
-		var max = Math.floor(possible.length + 1);
-
-		for (var i = 0; i < 5; i++) {
-			text += Math.floor(Math.random() * (max - min)) + min;
-		}
-		return possible;
-	}
-
 	var session = req.session;
-	var cartItems = session.itemQty;
-	var billingAddress = session.billingAddress;
-	var shippingAddress = session.shippingAddress;
-	var orderId = makeOrderId();
+	var itemArray = session.itemQty;
 
-	ControllerHelpers.cart.cartItemTotal(cartItems, fetchTotals);
+	findItemsAndTotals(itemArray, createStripeCharge);
 
-	function fetchTotals(err, res) {
-		if (err) {
-			console.log(err);
-		} else {
-			var total = res.total;
-			stripe.charges.create({
-				amount: total * 100,
-				currency: 'usd',
-				description: 'callback charge',
-				source: stripeToken
-			}, function (err, charge) {
-				if (err) {
-					console.log(err);
-				} else {
-					res.send(charge);
+	function findItemsAndTotals (cartItemQtyArray) {
+		var itemsInCart = cartItemQtyArray.map(function (item) {
+			return item.itemId;
+		});
+
+		Product.find({
+			_id: {$in: itemsInCart}
+		}, function(err, catalogItems) {
+			if (err) return err;
+
+			var mergedCartItems = (function() {
+				var merged = [];
+
+				for (var i = 0; i < catalogItems.length; i++) {
+					cartItemQtyArray.forEach(function(cartItem) {
+						if (cartItem.itemId === catalogItems[i].id) {
+							var tempItem = {};
+							tempItem.qty = cartItem.qty.toString();
+							tempItem.price = catalogItems[i].price.toString();
+							tempItem.lineTotal = (catalogItems[i].price * cartItem.qty).toString();
+							tempItem.title = catalogItems[i].title;
+							merged.push(tempItem);
+						}
+					});
 				}
-			});
-		}
+				return merged;
+			})();
+
+			var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+				return prevVal + (elem.qty * elem.price);
+			},0);
+
+			var shipping = (subTotal * 0.1);
+
+			var total = subTotal + shipping;
+
+			var totalsObj = {
+				itemsInCart: true,
+				cartItems: mergedCartItems,
+				shipping: shipping,
+				total: total
+			};
+			createStripeCharge(null, totalsObj);
+		});
 	}
 
-	function createCharge (error, totalsObj) {
+	function createStripeCharge (error, totalsObj) {
 		if (error) {
-			console.log(error);
+			createOrderDetails(error);
 		} else {
-			console.log(totalsObj);
 			stripe.charges.create({
-				amount: totalsObj.total * 10,
+				amount: totalsObj.total * 100,
 				currency: 'usd',
 				description: 'order_charge',
 				source: stripeToken
 			}, function (err, charge) {
 				if (err) {
+					createOrderDetails(err);
+				} else {
+					createOrderDetails(null, charge, totalsObj);
+				}
+			});
+		}
+	}
+
+	function createOrderDetails(error, stripeTransaction, itemAndTotals) {
+		if (error) {
+			saveOrder(error);
+		} else {
+			var cartItems = session.itemQty;
+			var billingAddress = session.billingAddress;
+			var shippingAddress = session.shippingAddress;
+			var orderId = (function() {
+				var text = '';
+				var possible = '0123456789';
+
+				var min = Math.ceil(0);
+				var max = Math.floor(possible.length + 1);
+
+				for (var i = 0; i < 5; i++) {
+					text += Math.floor(Math.random() * (max - min)) + min;
+				}
+				return possible;
+			})();
+
+			var orderDetails = {
+				orderId: orderId,
+				stripeTransactionId: stripeTransaction.id,
+				billingAddress: billingAddress,
+				shippingAddress: shippingAddress,
+				shippingAmount: itemAndTotals.shipping,
+				totalAmount: itemAndTotals.total,
+				amountCharged: itemAndTotals.total,
+				items: cartItems
+			};
+			saveOrder(null, orderDetails);
+		}
+
+	}
+
+	function saveOrder(error, orderDetail) {
+		if (error) {
+			console.log(error);
+		} else {
+			var order = new Order(orderDetail);
+
+			order.save(function (err) {
+				if (err) {
 					console.log(err);
 				} else {
-					res.send(charge);
+					console.log('success')
 				}
 			});
 		}
