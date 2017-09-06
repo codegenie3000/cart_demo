@@ -480,7 +480,6 @@ exports.stripePost = function(req, res, next) {
 exports.success = function(req, res, next) {
 	var session = req.session;
 	var orderId = session.orderId;
-	// var orderId = req.params.orderId;
 	res.render('order_confirmation', {
 		orderId: orderId,
 		pageName: 'Order Confirmation'
