@@ -29,6 +29,10 @@ router.get('/confirmation', cartController.checkoutConfirmation);
 
 router.get('/payment', cartController.payment);
 
+// router.get('/success/:orderId', cartController.success);
+router.get('/success/', cartController.success);
+
 router.get('/remove/:id', cartController.remove_product);
+
 
 module.exports = router;

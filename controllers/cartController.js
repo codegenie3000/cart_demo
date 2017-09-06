@@ -406,21 +406,19 @@ exports.stripePost = function(req, res, next) {
 		if (error) {
 			saveOrder(error);
 		} else {
+			function generateId() {
+				var text = '';
+
+				for (var i = 0; i < 5; i++) {
+					text += Math.floor(Math.random() * 10).toString();
+				}
+				return text;
+			}
+
 			var cartItems = session.itemQty;
 			var billingAddress = session.billingAddress;
 			var shippingAddress = session.shippingAddress;
-			var orderId = (function() {
-				var text = '';
-				var possible = '0123456789';
-
-				var min = Math.ceil(0);
-				var max = Math.floor(possible.length + 1);
-
-				for (var i = 0; i < 5; i++) {
-					text += Math.floor(Math.random() * (max - min)) + min;
-				}
-				return possible;
-			})();
+			var orderId = generateId();
 
 			var orderDetails = {
 				orderId: orderId,
@@ -432,10 +430,35 @@ exports.stripePost = function(req, res, next) {
 				amountCharged: itemAndTotals.total,
 				items: cartItems
 			};
+			session.orderId = orderId;
 			saveOrder(null, orderDetails);
 		}
-
 	}
+
+	/*function genOrderIdAndCheck() {
+		function genOrderId() {
+			var text = '';
+
+			for (var i = 0; i < 5; i++) {
+				text += Math.floor(Math.random() * 10).toString();
+			}
+			return text;
+		}
+		var orderIdExists = false;
+		while (!orderIdExists) {
+			var orderId = genOrderId();
+			Order.find({orderId: orderId}, function (err, res) {
+				if (err) {
+					console.log(err);
+				} else {
+					if (res.length === 0) {
+						orderIdExists = true;
+					}
+				}
+			});
+		}
+		return orderId;
+	}*/
 
 	function saveOrder(error, orderDetail) {
 		if (error) {
@@ -443,13 +466,23 @@ exports.stripePost = function(req, res, next) {
 		} else {
 			var order = new Order(orderDetail);
 
-			order.save(function (err) {
+			order.save(function (err, order) {
 				if (err) {
 					console.log(err);
 				} else {
-					console.log('success')
+					res.send('/cart/success/');
 				}
 			});
 		}
 	}
+};
+
+exports.success = function(req, res, next) {
+	var session = req.session;
+	var orderId = session.orderId;
+	// var orderId = req.params.orderId;
+	res.render('order_confirmation', {
+		orderId: orderId,
+		pageName: 'Order Confirmation'
+	});
 };
