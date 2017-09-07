@@ -420,6 +420,32 @@ exports.stripePost = function(req, res, next) {
 			var shippingAddress = session.shippingAddress;
 			var orderId = generateId();
 
+			function genOrderIdAndCheck() {
+				function genOrderId() {
+					var text = '';
+
+					for (var i = 0; i < 5; i++) {
+						text += Math.floor(Math.random() * 10).toString();
+					}
+					return text;
+				}
+
+				var orderIdExists = false;
+				while (!orderIdExists) {
+					var orderId = genOrderId();
+					Order.find({orderId: orderId}, function (err, res) {
+						if (err) {
+							console.log(err);
+						} else {
+							if (res.length === 0) {
+								orderIdExists = true;
+							}
+						}
+					});
+				}
+				return orderId;
+			}
+
 			var orderDetails = {
 				orderId: orderId,
 				stripeTransactionId: stripeTransaction.id,
