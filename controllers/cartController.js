@@ -406,48 +406,11 @@ exports.stripePost = function(req, res, next) {
 		if (error) {
 			saveOrder(error);
 		} else {
-			function generateId() {
-				var text = '';
-
-				for (var i = 0; i < 5; i++) {
-					text += Math.floor(Math.random() * 10).toString();
-				}
-				return text;
-			}
-
 			var cartItems = session.itemQty;
 			var billingAddress = session.billingAddress;
 			var shippingAddress = session.shippingAddress;
-			var orderId = generateId();
-
-			function genOrderIdAndCheck() {
-				function genOrderId() {
-					var text = '';
-
-					for (var i = 0; i < 5; i++) {
-						text += Math.floor(Math.random() * 10).toString();
-					}
-					return text;
-				}
-
-				var orderIdExists = false;
-				while (!orderIdExists) {
-					var orderId = genOrderId();
-					Order.find({orderId: orderId}, function (err, res) {
-						if (err) {
-							console.log(err);
-						} else {
-							if (res.length === 0) {
-								orderIdExists = true;
-							}
-						}
-					});
-				}
-				return orderId;
-			}
-
+			
 			var orderDetails = {
-				orderId: orderId,
 				stripeTransactionId: stripeTransaction.id,
 				billingAddress: billingAddress,
 				shippingAddress: shippingAddress,
@@ -456,36 +419,38 @@ exports.stripePost = function(req, res, next) {
 				amountCharged: itemAndTotals.total,
 				items: cartItems
 			};
-			session.orderId = orderId;
-			saveOrder(null, orderDetails);
+
+			(function genOrderIdAndCheck() {
+				function genOrderId() {
+					var text = '';
+
+					for (var i = 0; i < 5; i++) {
+						text += Math.floor(Math.random() * 10).toString();
+					}
+					return text;
+				}
+				
+				(function checkOrderId() {
+					var orderId = genOrderId();
+					
+					Order.find({orderId: orderId}, function (err, res) {
+						if (err) {
+							saveOrder(error);
+						} else {
+							if (res.length > 0) {
+								checkOrderId();
+							} else {
+								orderDetails.orderId = orderId;
+								session.orderId = orderId;
+								saveOrder(null, orderDetails);
+							}
+						}
+					});
+				})();
+			})();
 		}
 	}
-
-	/*function genOrderIdAndCheck() {
-		function genOrderId() {
-			var text = '';
-
-			for (var i = 0; i < 5; i++) {
-				text += Math.floor(Math.random() * 10).toString();
-			}
-			return text;
-		}
-		var orderIdExists = false;
-		while (!orderIdExists) {
-			var orderId = genOrderId();
-			Order.find({orderId: orderId}, function (err, res) {
-				if (err) {
-					console.log(err);
-				} else {
-					if (res.length === 0) {
-						orderIdExists = true;
-					}
-				}
-			});
-		}
-		return orderId;
-	}*/
-
+	
 	function saveOrder(error, orderDetail) {
 		if (error) {
 			console.log(error);
