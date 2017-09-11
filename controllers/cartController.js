@@ -7,13 +7,15 @@
  * Created by jonathan on 6/14/17.
  */
 
-// var keyPublishable = 'pk_test_7FDEq537OGNCurGLehNg2FcB';
-var keySecret = process.env.STRIPE_SECRET;
+// var mailgun = require('mailgun-js');
+var mailgunKey = process.env.MAILGUN_SECRET;
+var mailgunDomain = process.env.MAILGUN_DOMAIN;
+var mailgun = require('mailgun-js')({apiKey: mailgunKey, domain: mailgunDomain});
 
-var stripe = require('stripe')(keySecret);
+var stripeKeySecret = process.env.STRIPE_SECRET;
+var stripe = require('stripe')(stripeKeySecret);
 
 var Product = require('../models/product');
-
 var Order = require('../models/order');
 
 var ControllerHelpers = require('./controllerHelpers');
@@ -369,12 +371,6 @@ exports.payment = function(req, res, next) {
 };
 
 exports.stripePost = function(req, res, next) {
-	// Create transaction ID
-	// Create order with transaction ID - copy billing and shipping address, items & qty, totals, and stripe reference to order
-	// Check if customer exists by querying email address
-	// If customer exists, associate current customer with Transaction ID
-	// If customer isn't found, create new customer and associate transaction ID with customer
-
 	req.sanitize('stripeToken');
 	var stripeToken = req.body.id;
 
@@ -456,6 +452,7 @@ exports.stripePost = function(req, res, next) {
 			console.log(error);
 		} else {
 			var order = new Order(orderDetail);
+			emailUser(null, orderDetail);
 
 			order.save(function (err, order) {
 				if (err) {
@@ -465,6 +462,25 @@ exports.stripePost = function(req, res, next) {
 				}
 			});
 		}
+	}
+
+	function emailUser(error, orderDetail) {
+		var userData = {
+			email: orderDetail.billingAddress.email,
+			name: orderDetail.billingAddress.name,
+			orderId: orderDetail.orderId
+		};
+
+		var emailData = {
+			to: userData.email,
+			from: 'Orders<orders@mg.jonathanperalez.com>',
+			subject: 'Thank you for your order',
+			text: 'Thank you for your order. Your order Id is: ' + userData.orderId
+		};
+
+		mailgun.messages().send(emailData, function(error, body) {
+			console.log(body);
+		});
 	}
 };
 
