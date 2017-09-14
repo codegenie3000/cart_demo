@@ -458,6 +458,9 @@ exports.stripePost = function(req, res, next) {
 				if (err) {
 					console.log(err);
 				} else {
+                    (function deleteItemsFromSession() {
+                        delete session.itemQty;
+                    })();
 					res.send('/cart/success/');
 				}
 			});
