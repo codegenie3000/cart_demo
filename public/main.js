@@ -333,6 +333,24 @@ var paymentFunc = {
     }
 };
 
+var modalAjaxHandler = {
+    method: 'GET',
+    contentType: 'application/json',
+    error: function() {
+        console.log('error');
+    },
+    success: function(data) {
+        if (data.allClear !== 'true') {
+            $('#modal-message').text(data.modalMessage);
+            $('#button-message').text(data.buttonMessage);
+            $('a.modal-url').attr('href', data.buttonURL);
+            $('#info-missing-modal').modal({
+                backdrop: 'static'
+            });
+        }
+    }
+};
+
 $(document).ready(function () {
     var emailAddressRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
@@ -346,24 +364,7 @@ $(document).ready(function () {
     }
     if (document.getElementById('checkout') && document.getElementsByClassName('step01')[0]) {
         // Send get request to /cart/billing/itemsInCart
-
-        $.ajax('/cart/billing/checkIfReady', {
-            method: 'GET',
-            contentType: 'application/json',
-            error: function() {
-                console.log('error');
-            },
-            success: function(data) {
-                if (data.allClear !== 'true') {
-                    $('#modal-message').text(data.modalMessage);
-                    $('#button-message').text(data.buttonMessage);
-                    $('a.modal-url').attr('href', data.buttonURL);
-                    $('#info-missing-modal').modal({
-                        backdrop: 'static'
-                    });
-                }
-            }
-        });
+        $.ajax('/cart/billing/checkIfReady', modalAjaxHandler);
 
         billingFunc.init();
         billingFunc.fieldsCompleteCheck();
@@ -371,28 +372,17 @@ $(document).ready(function () {
     }
     if (document.getElementById('checkout') && document.getElementsByClassName('step02')[0]) {
 
-        $.ajax('/cart/shipping/checkIfReady', {
-            method: 'GET',
-            contentType: 'application/json',
-            error: function() {
-                console.log('error');
-            },
-            success: function(data) {
-                if (data.allClear !== 'true') {
-                    $('#modal-message').text(data.modalMessage);
-                    $('#button-message').text(data.buttonMessage);
-                    $('a.modal-url').attr('href', data.buttonURL);
-                    $('#info-missing-modal').modal({
-                        backdrop: 'static'
-                    });
-                }
-            }
-        });
+        $.ajax('/cart/shipping/checkIfReady', modalAjaxHandler);
         shippingFunc.init();
         shippingFunc.fieldsCompleteCheck();
         shippingFunc.submitForm();
     }
-    if (document.getElementById('checkout') && document.getElementsByClassName('card-entry')) {
+    if (document.getElementById('checkout') && document.getElementsByClassName('step03')[0]) {
+        $.ajax('/cart/confirmation/checkIfReady', modalAjaxHandler);
+    }
+
+    if (document.getElementById('checkout') && document.getElementsByClassName('card-entry')[0]) {
+        $.ajax('/cart/confirmation/checkIfReady', modalAjaxHandler);
         paymentFunc.init();
         paymentFunc.submitListener();
     }
