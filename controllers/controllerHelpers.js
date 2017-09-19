@@ -273,55 +273,21 @@ exports.cart = (function() {
 	}
 })();
 
-/*
-exports.fetchCartPricesTotal = function(cartItemQtyArray, callback) {
-	var itemsInCart = cartItemQtyArray.map(function (item) {
-		return item.itemId;
-	});
-	Product.find({
-		_id: {$in: itemsInCart}
-	}, function(err, catalogItems) {
-
-		cart.cartItems(catalogItems);
-
-		var mergedCartItems = (function() {
-			var merged = [];
-
-			for (var i = 0; i < catalogItems.length; i++) {
-				cartItemQtyArray.forEach(function(cartItem) {
-					if (cartItem.itemId === catalogItems[i].id) {
-						var tempItem = {};
-						tempItem.qty = cartItem.qty.toString();
-						tempItem.price = catalogItems[i].price.toString();
-						tempItem.lineTotal = (catalogItems[i].price * cartItem.qty).toString();
-						tempItem.title = catalogItems[i].title;
-						// catalogItems[i]['qty'] = cartItem.qty;
-						// catalogItems[i]['lineTotal'] = cartItem.qty * catalogItems[i].price;
-						// merged.push(catalogItems[i]);
-						merged.push(tempItem);
-					}
-				});
-			}
-			return merged;
-		})();
-
-		var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
-			return prevVal + (elem.qty * elem.price);
-		},0);
-
-		var shipping = (subTotal * 0.2);
-
-		var total = subTotal + shipping;
-
-		//TODO create regex and convert number to decimal and comma format
-		console.log('ran with calc', subTotal.toString());
-
-		return {
-			itemsInCart: true,
-			cartItems: mergedCartItems,
-			shipping: shipping.toString(),
-			total: total.toString()
-		}
-	});
-
-};*/
+exports.modals = (function() {
+    function createModalObject(message, buttonURL, buttonMessage) {
+        var obj = {};
+        obj.allClear = 'false';
+        obj.modalMessage = message;
+        obj.buttonURL = buttonURL;
+        obj.buttonMessage = buttonMessage;
+        return obj;
+    }
+    var noItems = createModalObject('Please add some items to your cart before you check out', '/', 'View catalog');
+    var noBilling = createModalObject('Please enter your billing address before you check out', '/cart/billing', 'Enter billing info');
+    var noShipping = createModalObject('Please enter your shipping address before you check out', '/cart/shipping', 'Enter shipping info');
+    return {
+        noItems: noItems,
+        noBilling: noBilling,
+        noShipping: noShipping
+    }
+})();

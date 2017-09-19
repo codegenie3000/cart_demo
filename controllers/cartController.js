@@ -20,6 +20,8 @@ var Order = require('../models/order');
 
 var ControllerHelpers = require('./controllerHelpers');
 
+var modalHelpers = ControllerHelpers.modals;
+
 exports.index = function(req, res, next) {
 	if (req.session.itemQty) {
 		//TODO convert into modules
@@ -131,31 +133,9 @@ exports.remove_product = function(req, res, next) {
 };
 
 exports.submitBillingData = function(req, res, next) {
+    var foo = req.param;
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
-
-	/*function safeJSONObject(JSONString, propArray, maxLength) {
-		var parsedObj, safeObj = {};
-		try {
-			if (maxLength && JSONString.length > maxLength) {
-				return null;
-			} else {
-				parsedObj = JSONString;
-				if (typeof parsedObj !== 'object' || Array.isArray(parsedObj)) {
-					safeObj = parsedObj;
-				} else {
-					propArray.forEach(function (prop) {
-						if (parsedObj.hasOwnProperty(prop)) {
-							safeObj[prop] = parsedObj[prop];
-						}
-					});
-				}
-			}
-			return safeObj;
-		} catch(e) {
-			return null;
-		}
-	}*/
 
 	//TODO convert to module
 	function safeJSONObject(postObject, propArray) {
@@ -237,6 +217,15 @@ exports.billing = function(req, res, next) {
 	}
 };
 
+exports.billingIsReady = function(req, res, next) {
+    var session = req.session;
+    if (session.hasOwnProperty('itemQty') && session.itemQty.length > 0) {
+        res.send({allClear: 'true'});
+    } else {
+        res.send(modalHelpers.noItems);
+    }
+};
+
 exports.shipping = function(req, res, next) {
 	var stateArray = ControllerHelpers.stateList;
 	var sessRef = req.session;
@@ -259,6 +248,47 @@ exports.shipping = function(req, res, next) {
 			stateList: stateArray
 		});
 	}
+};
+
+exports.shippingIsReady = function(req, res, next) {
+    var sess = req.session;
+    if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0) {
+        if (sess.billingAddress) {
+            res.send({allClear: 'true'});
+        } else {
+            res.send(modalHelpers.noBilling);
+            /*res.send({
+                allClear: 'false',
+                modalMessage: 'Please enter your billing address before you check out',
+                buttonURL: '/cart/billing',
+                buttonMessage: 'Enter billing info'
+            });*/
+        }
+    } else {
+        res.send(modalHelpers.noItems);
+    }
+};
+
+exports.confirmationIsReady = function(req, res, next) {
+    var sess = req.session;
+    if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0) {
+        if (sess.billingAddress || !sess.shippingAddress) {
+            // no shipping address
+            res.send(modalHelpers.noShipping);
+        } else {
+            res.send(modalHelpers.noBilling);
+            // no billing address - direct to billing
+
+        }
+    } else {
+        res.send(modalHelpers.noItems);
+        /*res.send({
+            allClear: 'false',
+            modalMessage: 'Please add some items to your cart before you check out',
+            buttonURL: '/',
+            buttonMessage: 'View catalog'
+        });*/
+    }
 };
 
 exports.submitShippingData = function(req, res, next) {

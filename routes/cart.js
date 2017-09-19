@@ -21,11 +21,17 @@ router.post('/stripeSubmit', cartController.stripePost);
 
 router.get('/billing', cartController.billing);
 
+router.get('/billing/checkIfReady', cartController.billingIsReady);
+
 router.post('/shipping/submit', cartController.submitShippingData);
 
 router.get('/shipping', cartController.shipping);
 
+router.get('/shipping/checkIfReady', cartController.shippingIsReady);
+
 router.get('/confirmation', cartController.checkoutConfirmation);
+
+router.get('/confirmation/checkIfReady', cartController.confirmationIsReady);
 
 router.get('/payment', cartController.payment);
 
