@@ -274,7 +274,7 @@ exports.cart = (function() {
 })();
 
 exports.modals = (function() {
-    function createModalObject(message, buttonURL, buttonMessage) {
+    function CreateModalObject(message, buttonURL, buttonMessage) {
         var obj = {};
         obj.allClear = 'false';
         obj.modalMessage = message;
@@ -282,9 +282,9 @@ exports.modals = (function() {
         obj.buttonMessage = buttonMessage;
         return obj;
     }
-    var noItems = createModalObject('Please add some items to your cart before you check out', '/', 'View catalog');
-    var noBilling = createModalObject('Please enter your billing address before you check out', '/cart/billing', 'Enter billing info');
-    var noShipping = createModalObject('Please enter your shipping address before you check out', '/cart/shipping', 'Enter shipping info');
+    var noItems = CreateModalObject('Please add some items to your cart before you check out', '/', 'View catalog');
+    var noBilling = CreateModalObject('Please enter your billing address before you check out', '/cart/billing', 'Enter billing info');
+    var noShipping = CreateModalObject('Please enter your shipping address before you check out', '/cart/shipping', 'Enter shipping info');
     return {
         noItems: noItems,
         noBilling: noBilling,

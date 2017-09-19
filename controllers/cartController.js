@@ -7,7 +7,6 @@
  * Created by jonathan on 6/14/17.
  */
 
-// var mailgun = require('mailgun-js');
 var mailgunKey = process.env.MAILGUN_SECRET;
 var mailgunDomain = process.env.MAILGUN_DOMAIN;
 var mailgun = require('mailgun-js')({apiKey: mailgunKey, domain: mailgunDomain});
@@ -257,12 +256,6 @@ exports.shippingIsReady = function(req, res, next) {
             res.send({allClear: 'true'});
         } else {
             res.send(modalHelpers.noBilling);
-            /*res.send({
-                allClear: 'false',
-                modalMessage: 'Please enter your billing address before you check out',
-                buttonURL: '/cart/billing',
-                buttonMessage: 'Enter billing info'
-            });*/
         }
     } else {
         res.send(modalHelpers.noItems);
@@ -271,23 +264,18 @@ exports.shippingIsReady = function(req, res, next) {
 
 exports.confirmationIsReady = function(req, res, next) {
     var sess = req.session;
-    if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0) {
-        if (sess.billingAddress || !sess.shippingAddress) {
-            // no shipping address
-            res.send(modalHelpers.noShipping);
-        } else {
-            res.send(modalHelpers.noBilling);
-            // no billing address - direct to billing
-
-        }
+    if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0 && sess.billingAddress && sess.shippingAddress) {
+        res.send({allClear: 'true'});
     } else {
-        res.send(modalHelpers.noItems);
-        /*res.send({
-            allClear: 'false',
-            modalMessage: 'Please add some items to your cart before you check out',
-            buttonURL: '/',
-            buttonMessage: 'View catalog'
-        });*/
+        if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0) {
+            if (sess.billingAddress || !sess.shippingAddress) {
+                res.send(modalHelpers.noShipping);
+            } else {
+                res.send(modalHelpers.noBilling);
+            }
+        } else {
+            res.send(modalHelpers.noItems);
+        }
     }
 };
 
@@ -329,27 +317,40 @@ exports.checkoutConfirmation = function(req, res, next) {
 	// session.itemQty is array with [{itemId: ..., qty: 2}, {...}]
 	if (req.session) {
 		var addressFields = (function () {
-			var sessRef = req.session;
-			var billingAddressRef = sessRef.billingAddress;
-			var shippingAddressRef = sessRef.shippingAddress;
+		    if (req.hasOwnProperty('session')) {
+                var sessRef = req.session;
+                var billingAddress;
+                var shippingAddress;
 
-			var billingAddress = {
-				name: billingAddressRef.name,
-				address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
-				city: billingAddressRef.city,
-				state: billingAddressRef.state,
-				zip: billingAddressRef.zip,
-				phone: billingAddressRef.phone,
-				email: billingAddressRef.email
-			};
-			var shippingAddress = {
-				name: shippingAddressRef.name,
-				address: shippingAddressRef.address1 + ', ' + shippingAddressRef.address2,
-				city: shippingAddressRef.city,
-				state: shippingAddressRef.state,
-				zip: shippingAddressRef.zip,
-				phone: shippingAddressRef.phone
-			};
+                if (sessRef.hasOwnProperty('billingAddress')) {
+                    var billingAddressRef = sessRef.billingAddress;
+                    billingAddress = {
+                        name: billingAddressRef.name,
+                        address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
+                        city: billingAddressRef.city,
+                        state: billingAddressRef.state,
+                        zip: billingAddressRef.zip,
+                        phone: billingAddressRef.phone,
+                        email: billingAddressRef.email
+                    };
+                } else {
+                    billingAddress = {};
+                }
+
+                if (sessRef.hasOwnProperty('shippingAddress')) {
+                    var shippingAddressRef = sessRef.shippingAddress;
+                    shippingAddress = {
+                        name: shippingAddressRef.name,
+                        address: shippingAddressRef.address1 + ', ' + shippingAddressRef.address2,
+                        city: shippingAddressRef.city,
+                        state: shippingAddressRef.state,
+                        zip: shippingAddressRef.zip,
+                        phone: shippingAddressRef.phone
+                    };
+                } else {
+                    shippingAddress = {};
+                }
+            }
 
 			return {
 				billing: billingAddress,
@@ -357,47 +358,63 @@ exports.checkoutConfirmation = function(req, res, next) {
 			}
 		})();
 
-		var cart = req.session.itemQty;
+        if (req.session.hasOwnProperty('itemQty')) {
+            var cart = req.session.itemQty;
+            ControllerHelpers.cart.cartItemTotal(cart, renderCartTotal);
 
-		ControllerHelpers.cart.cartItemTotal(cart, renderCartTotal);
-
-		function renderCartTotal(error, cartTotalsObj) {
-			if (error) {
-				console.log(error);
-			} else {
-				res.render('cart_confirmation', {
-					billingAddress: addressFields.billing,
-					shippingAddress: addressFields.shipping,
-					pageName: 'Verify Information',
-					cartItem: cartTotalsObj.cartItems,
-					shipping: cartTotalsObj.shipping,
-					total: cartTotalsObj.total
-				});
-			}
-		}
+            function renderCartTotal(error, cartTotalsObj) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    res.render('cart_confirmation', {
+                        billingAddress: addressFields.billing,
+                        shippingAddress: addressFields.shipping,
+                        pageName: 'Verify Information',
+                        cartItem: cartTotalsObj.cartItems,
+                        shipping: cartTotalsObj.shipping,
+                        total: cartTotalsObj.total
+                    });
+                }
+            }
+        } else {
+            res.render('cart_confirmation', {
+                billingAddress: {},
+                shippingAddress: {},
+                pageName: 'Verify Information',
+                cartItem: {},
+                shipping: '0',
+                total: '0'
+            });
+        }
 	}
 };
 
 exports.payment = function(req, res, next) {
 	if (req.session) {
-		var addressFields = (function() {
-			var sessRef = req.session;
-			var billingAddressRef = sessRef.billingAddress;
+		if (req.session.billing) {
+            var addressFields = (function() {
+                var sessRef = req.session;
+                var billingAddressRef = sessRef.billingAddress;
 
-			return {
-				name: billingAddressRef.name,
-				address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
-				city: billingAddressRef.city,
-				state: billingAddressRef.state,
-				zip: billingAddressRef.zip,
-				phone: billingAddressRef.phone,
-				email: billingAddressRef.email
-			};
-		})();
+                return {
+                    name: billingAddressRef.name,
+                    address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
+                    city: billingAddressRef.city,
+                    state: billingAddressRef.state,
+                    zip: billingAddressRef.zip,
+                    phone: billingAddressRef.phone,
+                    email: billingAddressRef.email
+                };
+            })();
+            res.render('card_entry', {
+                billingAddress: addressFields
+            });
+        } else {
+		    res.render('card_entry', {
+		        billingAddress: {}
+            });
+        }
 	}
-	res.render('card_entry', {
-		billingAddress: addressFields
-	});
 };
 
 exports.stripePost = function(req, res, next) {
