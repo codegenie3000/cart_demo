@@ -57,12 +57,12 @@ typings/
 # dotenv environment variables file
 .env
 
-# Jetbrains User-specific stuff
+# Jetbrains - User-specific:
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
 
-# Jetbrains Sensitive or high-churn files:
+# Jetbrains sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.xml
@@ -81,10 +81,6 @@ cmake-build-debug/
 # Jetbrains Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
 
-## Jetbrains File-based project format:
-*.iws
-
-# Visual Studio Code folder (for scratch stuff)
+# Other
 .vscode/*
-
 #public/*
