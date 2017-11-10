@@ -36,7 +36,6 @@ var features = {
 var productDetail = {
     addToCart: function () {
         $('#add-to-cart').submit(function (e) {
-            console.log('ran');
             var productClassName = this.classList[1];
             var productId = /product-(\S+)/g.exec(productClassName)[1];
             var qtySelected = {qtySelect: this[0].value};
