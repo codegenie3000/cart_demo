@@ -46,21 +46,18 @@
 					Cart <a href="/cart">edit</a>
 				</div>
 				<div class="panel-body">
-					<!--<div class="col-sm-6 text-left">Item 1 (2)</div>
-					<div class="col-sm-6 text-right">100.00</div>
-					<hr>
-					<div class="col-sm-6 text-left">Total:</div>
-					<div class="col-sm-6 text-right">100.00</div>-->
 					{{#each cartItem}}
 						<div class="row">
-							<div class="col-sm-6 text-left">{{title}} ({{qty}})</div>
-							<div class="col-sm-6 text-right">{{lineTotal}}</div>
+							<div class="col-xs-6 text-left">{{title}} ({{qty}})</div>
+							<div class="col-xs-6 text-right">{{lineTotal}}</div>
 						</div>
 					{{/each}}
 					<hr>
 					<div class="row">
-						<div class="col-sm-6 text-left">Shipping: {{shipping}}</div>
-						<div class="col-sm-6 text-right">Total: {{total}}</div>
+						<p class="col-sm-12 text-right">Shipping: {{shipping}}</p>
+					</div>
+					<div class="row">
+						<p class="col-sm-12 text-right">Total: {{total}}</p>
 					</div>
 				</div>
 			</div>

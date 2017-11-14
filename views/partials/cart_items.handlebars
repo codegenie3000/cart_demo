@@ -1,14 +1,14 @@
 <div class="container">
     {{#each cartItems}}
         <div class="row product-row">
-            <div class="col-sm-6 match-cart-height">
+            <div class="col-xs-8 col-sm-6 match-cart-height">
                 <img src="https://{{mainImage}}" class="cart-thumb">{{title}}
             </div>
-            <div class="col-sm-3 match-cart-height">
+            <div class="col-xs-4 col-sm-3 match-cart-height">
                 <span class="test">{{price}}</span>
             </div>
-            <div class="col-sm-3 match-cart-height">
-                <div class="form-group match-height align-right">
+            <div class="col-xs-12 col-sm-3 match-cart-height">
+                <div class="form-group match-height align-when-768">
                     <label for="qtySelectItem{{_id}}" hidden>Select Quantity</label>
 
                     <select class="form-control change-qty" id="qtySelectItem{{_id}}">

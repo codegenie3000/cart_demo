@@ -32,7 +32,7 @@ div.add-space {
     margin-bottom: 15px;
 }
 
-div.align-right {
+div.align-when-768 {
     right: 0;
 }
 
@@ -41,15 +41,18 @@ div.align-right {
     margin-right: 0;
 }
 
-@media (max-width: 480px) {
-    img#beach_lg {
-        display: none;
+@media (min-width: 768px) {
+    div.align-when-768 {
+        right: 0;
     }
 }
 
-@media (min-width: 480px) {
-    img#beach_sm {
-        display: none;
+@media (max-width: 768px) {
+    div.align-when-768 {
+        left: 0;
+    }
+    div.cart-hide-not-desktop {
+        display:none;
     }
 }
 
