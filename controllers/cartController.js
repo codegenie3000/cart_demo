@@ -391,7 +391,7 @@ exports.checkoutConfirmation = function(req, res, next) {
 
 exports.payment = function(req, res, next) {
 	if (req.session) {
-		if (req.session.billing) {
+		if (req.session.billingAddress) {
             var addressFields = (function() {
                 var sessRef = req.session;
                 var billingAddressRef = sessRef.billingAddress;
