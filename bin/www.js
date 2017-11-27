@@ -9,17 +9,17 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var fs = require('fs');
-var debug = require('debug')('demo-cart:server');
-var https = require('https');
+const app = require('../app');
+const fs = require('fs');
+const debug = require('debug')('demo-cart:server');
+const https = require('https');
 // var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -28,14 +28,14 @@ app.set('port', port);
 // var server = http.createServer(app);
 
 /* Create HTTPS server */
-var options = {
+const options = {
 	key: fs.readFileSync('../../server.key'),
     cert: fs.readFileSync('../../server.crt'),
     requestCert: false,
     rejectUnauthorized: false
 };
 
-var server = https.createServer(options, app);
+const server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -98,8 +98,8 @@ function onError(error) {
  */
 
 function onListening() {
-	var addr = server.address();
-	var bind = typeof addr === 'string'
+	const addr = server.address();
+	const bind = typeof addr === 'string'
 		? 'pipe ' + addr
 		: 'port ' + addr.port;
 	debug('Listening on ' + bind);
