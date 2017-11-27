@@ -5,40 +5,40 @@
 
 require('dotenv').config();
 
-var express = require('express');
-var exphbs = require('express-handlebars');
+const express = require('express');
+const exphbs = require('express-handlebars');
 var helpers = require('./lib/helpers');
 
 //Set up mongoose connection
-var mongoose = require('mongoose');
-var dbURL = process.env.DB_HOST,
+const mongoose = require('mongoose');
+const dbURL = process.env.DB_HOST,
 	user = process.env.DB_USER,
 	pw = process.env.DB_PASS;
-var dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;
+const dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;
 mongoose.connect(dbURI);
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressValidator = require('express-validator');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 
 // var cookieSession = require('cookie-session');
 
 // express-session
-var session = require('express-session');
+const session = require('express-session');
 // var stripe = require('stripe')(process.env.STRIPE_SECRET);
 
-var index = require('./routes/index');
-var products = require('./routes/products');
-var cart = require('./routes/cart');
+const index = require('./routes/index');
+const products = require('./routes/products');
+const cart = require('./routes/cart');
 
-var app = express();
+const app = express();
 
-var hbs = exphbs.create({
+const hbs = exphbs.create({
 	defaultLayout: 'main',
 	helpers: helpers,
 	partialsDir: [
@@ -75,7 +75,7 @@ app.use('/cart', cart);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
