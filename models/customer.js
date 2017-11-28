@@ -3,13 +3,13 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var moment = require('moment');
+const moment = require('moment');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var CustomerSchema = Schema(
+const CustomerSchema = Schema(
 	{
 		name: {type: String, required: true, max: 200},
 		email: {type: String, required: true, max: 100},

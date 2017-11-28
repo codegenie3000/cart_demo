@@ -3,11 +3,11 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var OrderSchema = Schema(
+const OrderSchema = Schema(
 	{
 		orderId: {type: String, required: true, max: 5},
 		orderTimestamp: {type: Date, required: true, default: Date.now},

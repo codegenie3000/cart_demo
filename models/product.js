@@ -7,13 +7,13 @@
  * Created by Jonathan on 5/16/2017.
  */
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var moment = require('moment');
+// var moment = require('moment');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var ProductSchema = Schema(
+const ProductSchema = Schema(
 	{
 		title: { type: String, required: true, max: 200 },
 		description: { type: String, required: true, max: 200 },
@@ -33,26 +33,26 @@ ProductSchema
 ProductSchema
 	.virtual('decimalPrice')
 	.get(function() {
-		var decimal = '.00';
-		var stringPrice = this.price.toString();
+        const decimal = '.00';
+        const stringPrice = this.price.toString();
 		return stringPrice + decimal;
 	});
 
 ProductSchema
 	.virtual('imageURLArray')
 	.get(function() {
-		var cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
-		var concatArray = this.images.map(function (image) {
+        const cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
+        return this.images.map(image => {
 			return { image: 'https://' + cloudfrontURL + image };
 		});
 		
-		return concatArray;
+		// return concatArray;
 	});
 
 ProductSchema
 	.virtual('mainImage')
 	.get(function() {
-		var cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
+		const cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
 		return cloudfrontURL + this.images[0];
 	});
 
