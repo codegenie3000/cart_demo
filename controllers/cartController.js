@@ -7,25 +7,25 @@
  * Created by jonathan on 6/14/17.
  */
 
-var mailgunKey = process.env.MAILGUN_SECRET;
-var mailgunDomain = process.env.MAILGUN_DOMAIN;
-var mailgun = require('mailgun-js')({apiKey: mailgunKey, domain: mailgunDomain});
+const mailgunKey = process.env.MAILGUN_SECRET;
+const mailgunDomain = process.env.MAILGUN_DOMAIN;
+const mailgun = require('mailgun-js')({apiKey: mailgunKey, domain: mailgunDomain});
 
-var stripeKeySecret = process.env.STRIPE_SECRET;
-var stripe = require('stripe')(stripeKeySecret);
+const stripeKeySecret = process.env.STRIPE_SECRET;
+const stripe = require('stripe')(stripeKeySecret);
 
-var Product = require('../models/product');
-var Order = require('../models/order');
+const Product = require('../models/product');
+const Order = require('../models/order');
 
-var ControllerHelpers = require('./controllerHelpers');
+const ControllerHelpers = require('./controllerHelpers');
 
-var modalHelpers = ControllerHelpers.modals;
+const modalHelpers = ControllerHelpers.modals;
 
 exports.index = function(req, res, next) {
 	if (req.session.itemQty) {
 		//TODO convert into modules
-		var cartItems = req.session.itemQty;
-		var itemsInCart = [];
+        const cartItems = req.session.itemQty;
+		let itemsInCart = [];
 
 		if (cartItems.length > 0) {
 			itemsInCart = cartItems.map(function (item) {
@@ -35,8 +35,8 @@ exports.index = function(req, res, next) {
 				_id: {$in: itemsInCart}
 			}, function(err, catalogItems) {
 
-				var mergedCartItems = (function() {
-					var merged = [];
+				const mergedCartItems = (function() {
+					const merged = [];
 
 					for (var i = 0; i < catalogItems.length; i++) {
 						cartItems.forEach(function(cartItem) {
@@ -49,13 +49,13 @@ exports.index = function(req, res, next) {
 					return merged;
 				})();
 
-				var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+				const subTotal = mergedCartItems.reduce(function (prevVal, elem) {
 					return prevVal + (elem.qty * elem.price);
 				},0);
 
-				var shipping = (subTotal * 0.2);
+                const shipping = (subTotal * 0.2);
 
-				var total = subTotal + shipping;
+                const total = subTotal + shipping;
 
 				//TODO create regex and convert number to decimal and comma format
 				console.log('ran with calc', subTotal.toString());
@@ -95,9 +95,9 @@ exports.change_qty = function(req, res, next) {
 	// TODO sanitize data
 	// var itemObj = JSON.parse(req.body.data);
 	// var sessionArray = req.session.itemQty;
-	var itemObj = req.body;
-	var sessionArray = req.session.itemQty;
-	for (var i = 0; i < sessionArray.length; i++) {
+    const itemObj = req.body;
+    const sessionArray = req.session.itemQty;
+	for (let i = 0; i < sessionArray.length; i++) {
 		if (sessionArray[i].itemId === itemObj.itemId) {
 			sessionArray[i].qty = parseInt(itemObj.qty);
 		}
@@ -110,15 +110,14 @@ exports.change_qty = function(req, res, next) {
 };
 
 exports.remove_product = function(req, res, next) {
-	var productId = req.params.id;
-	var itemQtyArr = req.session.itemQty;
+    const productId = req.params.id;
+    const itemQtyArr = req.session.itemQty;
 	// loop through session array
 	// if the id in the object of the array matches the productId
 	// then find the index of that object in the array
 	// use splice to remove that element
 
-	var index = itemQtyArr.findIndex(function (element) {
-		var foo = element;
+    const index = itemQtyArr.findIndex(function (element) {
 		return element.itemId === productId;
 	});
 	itemQtyArr.splice(index, 1);
@@ -132,13 +131,12 @@ exports.remove_product = function(req, res, next) {
 };
 
 exports.submitBillingData = function(req, res, next) {
-    var foo = req.param;
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
 
 	//TODO convert to module
 	function safeJSONObject(postObject, propArray) {
-		var safeObj = {};
+        const safeObj = {};
 		try {
 			propArray.forEach(function(prop) {
 				if (postObject.hasOwnProperty(prop)) {
@@ -151,24 +149,24 @@ exports.submitBillingData = function(req, res, next) {
 		}
 	}
 
-	var propertiesToCheck = ['email', 'name', 'address1', 'address2', 'city', 'state', 'zip', 'phone', 'bill-same-as-ship'];
+    const propertiesToCheck = ['email', 'name', 'address1', 'address2', 'city', 'state', 'zip', 'phone', 'bill-same-as-ship'];
 
-	var billingAddressObj = safeJSONObject(req.body, propertiesToCheck);
+    const billingAddressObj = safeJSONObject(req.body, propertiesToCheck);
 
-	var isBillingShippingSame = (function() {
-		var isSame = (billingAddressObj['bill-same-as-ship']);
+    const isBillingShippingSame = (function() {
+        const isSame = (billingAddressObj['bill-same-as-ship']);
 		delete billingAddressObj['bill-same-as-ship'];
 		return isSame;
 	})();
 
-	var sessRef = req.session;
+    const sessRef = req.session;
 
 	sessRef.billingAddress = billingAddressObj;
 
 	if (isBillingShippingSame) {
-		var addressWithoutEmail = {};
+        const addressWithoutEmail = {};
 		(function removeEmail() {
-			for (var prop in billingAddressObj) {
+			for (const prop in billingAddressObj) {
 				if (billingAddressObj.hasOwnProperty(prop) && prop !== 'email') {
 					addressWithoutEmail[prop] = billingAddressObj[prop];
 				}
@@ -183,18 +181,18 @@ exports.submitBillingData = function(req, res, next) {
 		if (err)
 			return next(err);
 
-		var checkout02URL = '/cart/shipping';
-		var checkout03URL = '/cart/confirmation';
+        const checkout02URL = '/cart/shipping';
+        const checkout03URL = '/cart/confirmation';
 
 		isBillingShippingSame ? res.send(checkout03URL) : res.send(checkout02URL);
 	});
 };
 
 exports.billing = function(req, res, next) {
-	var stateArray = ControllerHelpers.stateList;
-	var sessRef = req.session;
+    const stateArray = ControllerHelpers.stateList;
+    const sessRef = req.session;
 	if (sessRef.billingAddress) {
-		var billingAddress = sessRef.billingAddress;
+        const billingAddress = sessRef.billingAddress;
 
 		res.render('billing_address', {
 			pageName: 'Billing Address',
@@ -217,7 +215,7 @@ exports.billing = function(req, res, next) {
 };
 
 exports.billingIsReady = function(req, res, next) {
-    var session = req.session;
+    const session = req.session;
     if (session.hasOwnProperty('itemQty') && session.itemQty.length > 0) {
         res.send({allClear: 'true'});
     } else {
@@ -226,10 +224,10 @@ exports.billingIsReady = function(req, res, next) {
 };
 
 exports.shipping = function(req, res, next) {
-	var stateArray = ControllerHelpers.stateList;
-	var sessRef = req.session;
+    const stateArray = ControllerHelpers.stateList;
+    const sessRef = req.session;
 	if (sessRef.shippingAddress) {
-		var shippingAddress = sessRef.shippingAddress;
+        const shippingAddress = sessRef.shippingAddress;
 		res.render('shipping_address', {
 			pageName: 'Shipping Address',
 			stateList: stateArray,
@@ -250,7 +248,7 @@ exports.shipping = function(req, res, next) {
 };
 
 exports.shippingIsReady = function(req, res, next) {
-    var sess = req.session;
+    const sess = req.session;
     if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0) {
         if (sess.billingAddress) {
             res.send({allClear: 'true'});
@@ -263,7 +261,7 @@ exports.shippingIsReady = function(req, res, next) {
 };
 
 exports.confirmationIsReady = function(req, res, next) {
-    var sess = req.session;
+    const sess = req.session;
     if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0 && sess.billingAddress && sess.shippingAddress) {
         res.send({allClear: 'true'});
     } else {
@@ -285,7 +283,7 @@ exports.submitShippingData = function(req, res, next) {
 
 	//TODO Create this as a module to export/import later
 	function createShippingObject (requestBody, propArray) {
-		var safeObj = {};
+        const safeObj = {};
 		try {
 			propArray.forEach(function(prop) {
 				if (requestBody.hasOwnProperty(prop)) {
@@ -297,11 +295,11 @@ exports.submitShippingData = function(req, res, next) {
 			return null;
 		}
 	}
-	var propertiesToCheck = ['name', 'address1', 'address2', 'city', 'state', 'zip', 'phone'];
+    const propertiesToCheck = ['name', 'address1', 'address2', 'city', 'state', 'zip', 'phone'];
 
-	var shippingAddress = createShippingObject(req.body, propertiesToCheck);
+    const shippingAddress = createShippingObject(req.body, propertiesToCheck);
 
-	var sessRef = req.session;
+    const sessRef = req.session;
 	sessRef.shippingAddress = shippingAddress;
 
 	// Create this as a module later
@@ -316,9 +314,48 @@ exports.submitShippingData = function(req, res, next) {
 exports.checkoutConfirmation = function(req, res, next) {
 	// session.itemQty is array with [{itemId: ..., qty: 2}, {...}]
 	if (req.session) {
-		var addressFields = (function () {
+
+	    const addressFields = (function() {
+	        const billingAddress = function() {
+	            if (req.session.hasOwnProperty('billingAddress')) {
+	                const billingAddressRef = req.session.billingAddress;
+	                return {
+                        name: billingAddressRef.name,
+                        address: billingAddressRef.address1 + ', ' + billingAddressRef.address2,
+                        city: billingAddressRef.city,
+                        state: billingAddressRef.state,
+                        zip: billingAddressRef.zip,
+                        phone: billingAddressRef.phone,
+                        email: billingAddressRef.email
+                    };
+                } else {
+	                return {};
+                }
+            };
+            const shippingAddress = function() {
+                if (req.session.hasOwnProperty('shippingAddress')) {
+                    const shippingAddressRef= req.session.shippingAddress;
+                    return {
+                        name: shippingAddressRef.name,
+                        address: shippingAddressRef.address1 + ', ' + shippingAddressRef.address2,
+                        city: shippingAddressRef.city,
+                        state: shippingAddressRef.state,
+                        zip: shippingAddressRef.zip,
+                        phone: shippingAddressRef.phone
+                    };
+                } else {
+                    return {};
+                }
+            };
+
+	        return {
+	            billing: billingAddress(),
+                shipping: shippingAddress(),
+            }
+        })();
+        /*const addressFields = (function () {
 		    if (req.hasOwnProperty('session')) {
-                var sessRef = req.session;
+                const sessRef = req.session;
                 var billingAddress;
                 var shippingAddress;
 
@@ -356,10 +393,10 @@ exports.checkoutConfirmation = function(req, res, next) {
 				billing: billingAddress,
 				shipping: shippingAddress
 			}
-		})();
+		})();*/
 
         if (req.session.hasOwnProperty('itemQty')) {
-            var cart = req.session.itemQty;
+            const cart = req.session.itemQty;
             ControllerHelpers.cart.cartItemTotal(cart, renderCartTotal);
 
             function renderCartTotal(error, cartTotalsObj) {
@@ -392,9 +429,9 @@ exports.checkoutConfirmation = function(req, res, next) {
 exports.payment = function(req, res, next) {
 	if (req.session) {
 		if (req.session.billingAddress) {
-            var addressFields = (function() {
-                var sessRef = req.session;
-                var billingAddressRef = sessRef.billingAddress;
+            const addressFields = (function() {
+                const sessRef = req.session;
+                const billingAddressRef = sessRef.billingAddress;
 
                 return {
                     name: billingAddressRef.name,
@@ -419,10 +456,10 @@ exports.payment = function(req, res, next) {
 
 exports.stripePost = function(req, res, next) {
 	req.sanitize('stripeToken');
-	var stripeToken = req.body.id;
+    const stripeToken = req.body.id;
 
-	var session = req.session;
-	var itemArray = session.itemQty;
+    const session = req.session;
+    const itemArray = session.itemQty;
 
 	ControllerHelpers.cart.cartItemTotal(itemArray, createStripeCharge);
 
@@ -445,15 +482,35 @@ exports.stripePost = function(req, res, next) {
 		}
 	}
 
+    function saveOrder(error, orderDetail) {
+        if (error) {
+            console.log(error);
+        } else {
+            const order = new Order(orderDetail);
+            emailUser(null, orderDetail);
+
+            order.save(function (err, order) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    (function deleteItemsFromSession() {
+                        delete session.itemQty;
+                    })();
+                    res.send('/cart/success/');
+                }
+            });
+        }
+    }
+
 	function createOrderDetails(error, stripeTransaction, itemAndTotals) {
 		if (error) {
 			saveOrder(error);
 		} else {
-			var cartItems = session.itemQty;
-			var billingAddress = session.billingAddress;
-			var shippingAddress = session.shippingAddress;
-			
-			var orderDetails = {
+            const cartItems = session.itemQty;
+            const billingAddress = session.billingAddress;
+            const shippingAddress = session.shippingAddress;
+
+            const orderDetails = {
 				stripeTransactionId: stripeTransaction.id,
 				billingAddress: billingAddress,
 				shippingAddress: shippingAddress,
@@ -465,16 +522,16 @@ exports.stripePost = function(req, res, next) {
 
 			(function genOrderIdAndCheck() {
 				function genOrderId() {
-					var text = '';
+					let text = '';
 
-					for (var i = 0; i < 5; i++) {
+					for (let i = 0; i < 5; i++) {
 						text += Math.floor(Math.random() * 10).toString();
 					}
 					return text;
 				}
 				
 				(function checkOrderId() {
-					var orderId = genOrderId();
+					const orderId = genOrderId();
 					
 					Order.find({orderId: orderId}, function (err, res) {
 						if (err) {
@@ -494,34 +551,16 @@ exports.stripePost = function(req, res, next) {
 		}
 	}
 	
-	function saveOrder(error, orderDetail) {
-		if (error) {
-			console.log(error);
-		} else {
-			var order = new Order(orderDetail);
-			emailUser(null, orderDetail);
 
-			order.save(function (err, order) {
-				if (err) {
-					console.log(err);
-				} else {
-                    (function deleteItemsFromSession() {
-                        delete session.itemQty;
-                    })();
-					res.send('/cart/success/');
-				}
-			});
-		}
-	}
 
 	function emailUser(error, orderDetail) {
-		var userData = {
+		const userData = {
 			email: orderDetail.billingAddress.email,
 			name: orderDetail.billingAddress.name,
 			orderId: orderDetail.orderId
 		};
 
-		var emailData = {
+		const emailData = {
 			to: userData.email,
 			from: 'Orders<orders@mg.jonathanperalez.com>',
 			subject: 'Thank you for your order',
@@ -535,8 +574,8 @@ exports.stripePost = function(req, res, next) {
 };
 
 exports.success = function(req, res, next) {
-	var session = req.session;
-	var orderId = session.orderId;
+	const session = req.session;
+	const orderId = session.orderId;
 	res.render('order_confirmation', {
 		orderId: orderId,
 		pageName: 'Order Confirmation'
