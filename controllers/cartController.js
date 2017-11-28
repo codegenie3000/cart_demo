@@ -28,7 +28,7 @@ exports.index = function(req, res, next) {
 		let itemsInCart = [];
 
 		if (cartItems.length > 0) {
-			itemsInCart = cartItems.map(function (item) {
+			itemsInCart = cartItems.map(item => {
 				return item.itemId;
 			});
 			Product.find({
@@ -38,8 +38,8 @@ exports.index = function(req, res, next) {
 				const mergedCartItems = (function() {
 					const merged = [];
 
-					for (var i = 0; i < catalogItems.length; i++) {
-						cartItems.forEach(function(cartItem) {
+					for (let i = 0; i < catalogItems.length; i++) {
+						cartItems.forEach(cartItem => {
 							if (cartItem.itemId === catalogItems[i].id) {
 								catalogItems[i]['qty'] = cartItem.qty;
 								merged.push(catalogItems[i]);
@@ -49,9 +49,9 @@ exports.index = function(req, res, next) {
 					return merged;
 				})();
 
-				const subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+				const subTotal = mergedCartItems.reduce((prevVal, elem) => {
 					return prevVal + (elem.qty * elem.price);
-				},0);
+				}, 0);
 
                 const shipping = (subTotal * 0.2);
 
@@ -122,7 +122,7 @@ exports.remove_product = function(req, res, next) {
 	});
 	itemQtyArr.splice(index, 1);
 	req.session.itemQty = itemQtyArr;
-	req.session.save(function (err) {
+	req.session.save(err => {
 		if (err)
 			return next(err);
 		res.redirect('/cart');
@@ -138,7 +138,7 @@ exports.submitBillingData = function(req, res, next) {
 	function safeJSONObject(postObject, propArray) {
         const safeObj = {};
 		try {
-			propArray.forEach(function(prop) {
+			propArray.forEach(prop => {
 				if (postObject.hasOwnProperty(prop)) {
 					safeObj[prop] = postObject[prop];
 				}
@@ -285,7 +285,7 @@ exports.submitShippingData = function(req, res, next) {
 	function createShippingObject (requestBody, propArray) {
         const safeObj = {};
 		try {
-			propArray.forEach(function(prop) {
+			propArray.forEach(prop => {
 				if (requestBody.hasOwnProperty(prop)) {
 					safeObj[prop] = requestBody[prop];
 				}
@@ -303,7 +303,7 @@ exports.submitShippingData = function(req, res, next) {
 	sessRef.shippingAddress = shippingAddress;
 
 	// Create this as a module later
-	req.session.save(function (err) {
+	req.session.save(err => {
 		console.log('saved shipping address');
 		if (err) return next(err);
 
