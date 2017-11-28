@@ -7,7 +7,7 @@
  * Created by Jonathan on 5/16/2017.
  */
 
-var Product = require('../models/product');
+const Product = require('../models/product');
 
 /*
 exports.product_list = function(req, res, next) {
@@ -24,7 +24,7 @@ exports.product_list = function(req, res, next) {
 
 exports.index = function(req, res, next) {
 	Product.find({})
-		.exec(function (err, list_products) {
+		.exec((err, list_products) => {
 			// Diplay title, decimal price, and main image
 			if (err) { return next(err)}
 			res.render('home', {
@@ -40,10 +40,10 @@ exports.index = function(req, res, next) {
 
 exports.product_detail = function (req, res, next) {
 	Product.findById(req.params.id)
-		.exec(function (err, product) {
+		.exec((err, product) => {
 			if (err)
 				return next(err);
-			var imageArray = product.imageURLArray;
+			const imageArray = product.imageURLArray;
 			res.render('product_detail', {
 				product_data: product,
 				images: imageArray
@@ -55,16 +55,16 @@ exports.product_detail = function (req, res, next) {
 exports.add_to_cart = function (req, res, next) {
 	req.checkBody('qtySelect', 'Quantity must be specified.').notEmpty();
 	req.sanitize('qtySelect');
-	var itemObject = (function() {
-		var productId =  req.params.id;
-		var qtySelected = parseInt(req.body.qtySelect);
+	const itemObject = (function() {
+        const productId =  req.params.id;
+        const qtySelected = parseInt(req.body.qtySelect);
 		return { itemId: productId, qty: qtySelected};
 	})();
-	var sess = req.session;
-	var sessionItemArray = sess.itemQty;
+    const sess = req.session;
+    const sessionItemArray = sess.itemQty;
 	if (sessionItemArray) {
-		var found = false;
-		sessionItemArray.forEach(function (item) {
+        let found = false;
+		sessionItemArray.forEach(item => {
 			if (item.itemId === itemObject.itemId) {
 				item.qty += itemObject.qty;
 				found = true;
@@ -76,7 +76,7 @@ exports.add_to_cart = function (req, res, next) {
 	} else {
 		sess.itemQty = [itemObject];
 	}
-	req.session.save(function (err) {
+	req.session.save(err => {
 		if (err) {
 			return next(err);
 		} else {
