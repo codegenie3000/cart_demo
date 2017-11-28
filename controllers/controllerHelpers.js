@@ -6,8 +6,8 @@
 const Product = require('../models/product');
 
 exports.stateList = (function() {
-	var newArray = [];
-	var sourceArray = [
+	const newArray = [];
+	const sourceArray = [
 		{
 			"name": "Alabama",
 			"abbreviation": "AL"
@@ -215,15 +215,15 @@ exports.stateList = (function() {
 	];
 
 	sourceArray.forEach(function(elem) {
-		var newRecord = {stateName: elem.name, abbrev: elem.abbreviation};
+		const newRecord = {stateName: elem.name, abbrev: elem.abbreviation};
 		newArray.push(newRecord);
 	});
 	return newArray;
 })();
 
 exports.cart = (function() {
-	var findProducts = function(cartItemQtyArray, callback) {
-		var itemsInCart = cartItemQtyArray.map(function (item) {
+	const findProducts = function(cartItemQtyArray, callback) {
+        const itemsInCart = cartItemQtyArray.map(function (item) {
 			return item.itemId;
 		});
 
@@ -232,13 +232,13 @@ exports.cart = (function() {
 		}, function(err, catalogItems) {
 			if (err) return err;
 
-			var mergedCartItems = (function() {
-				var merged = [];
+            const mergedCartItems = (function() {
+                const merged = [];
 
-				for (var i = 0; i < catalogItems.length; i++) {
+				for (let i = 0; i < catalogItems.length; i++) {
 					cartItemQtyArray.forEach(function(cartItem) {
 						if (cartItem.itemId === catalogItems[i].id) {
-							var tempItem = {};
+                            const tempItem = {};
 							tempItem.qty = cartItem.qty.toString();
 							tempItem.price = catalogItems[i].price.toString();
 							tempItem.lineTotal = (catalogItems[i].price * cartItem.qty).toString();
@@ -250,15 +250,15 @@ exports.cart = (function() {
 				return merged;
 			})();
 
-			var subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+            const subTotal = mergedCartItems.reduce(function (prevVal, elem) {
 				return prevVal + (elem.qty * elem.price);
 			},0);
 
-			var shipping = (subTotal * 0.1);
+            const shipping = (subTotal * 0.1);
 
-			var total = subTotal + shipping;
+            const total = subTotal + shipping;
 
-			var obj = {
+            const obj = {
 				itemsInCart: true,
 				cartItems: mergedCartItems,
 				shipping: shipping,
@@ -275,16 +275,16 @@ exports.cart = (function() {
 
 exports.modals = (function() {
     function CreateModalObject(message, buttonURL, buttonMessage) {
-        var obj = {};
+        const obj = {};
         obj.allClear = 'false';
         obj.modalMessage = message;
         obj.buttonURL = buttonURL;
         obj.buttonMessage = buttonMessage;
         return obj;
     }
-    var noItems = CreateModalObject('Please add some items to your cart before you check out', '/', 'View catalog');
-    var noBilling = CreateModalObject('Please enter your billing address before you check out', '/cart/billing', 'Enter billing info');
-    var noShipping = CreateModalObject('Please enter your shipping address before you check out', '/cart/shipping', 'Enter shipping info');
+    const noItems = CreateModalObject('Please add some items to your cart before you check out', '/', 'View catalog');
+    const noBilling = CreateModalObject('Please enter your billing address before you check out', '/cart/billing', 'Enter billing info');
+    const noShipping = CreateModalObject('Please enter your shipping address before you check out', '/cart/shipping', 'Enter shipping info');
     return {
         noItems: noItems,
         noBilling: noBilling,
