@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const express = require('express');
 const exphbs = require('express-handlebars');
-var helpers = require('./lib/helpers');
+const helpers = require('./lib/helpers');
 
 //Set up mongoose connection
 const mongoose = require('mongoose');

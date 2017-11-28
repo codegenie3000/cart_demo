@@ -6,8 +6,8 @@
 /**
  * Created by jonathan on 6/14/17.
  */
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const cartController = require('../controllers/cartController');
 

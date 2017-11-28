@@ -7,8 +7,8 @@
  * Created by Jonathan on 5/16/2017.
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const generalController = require('../controllers/generalController');
 

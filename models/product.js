@@ -45,8 +45,6 @@ ProductSchema
         return this.images.map(image => {
 			return { image: 'https://' + cloudfrontURL + image };
 		});
-		
-		// return concatArray;
 	});
 
 ProductSchema
