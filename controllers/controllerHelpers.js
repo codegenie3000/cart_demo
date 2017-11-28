@@ -222,8 +222,8 @@ exports.stateList = (function() {
 })();
 
 exports.cart = (function() {
-	const findProducts = function(cartItemQtyArray, callback) {
-        const itemsInCart = cartItemQtyArray.map(function (item) {
+	const findProducts = ((cartItemQtyArray, callback) => {
+        const itemsInCart = cartItemQtyArray.map(item => {
 			return item.itemId;
 		});
 
@@ -236,7 +236,7 @@ exports.cart = (function() {
                 const merged = [];
 
 				for (let i = 0; i < catalogItems.length; i++) {
-					cartItemQtyArray.forEach(function(cartItem) {
+					cartItemQtyArray.forEach(cartItem => {
 						if (cartItem.itemId === catalogItems[i].id) {
                             const tempItem = {};
 							tempItem.qty = cartItem.qty.toString();
@@ -250,9 +250,9 @@ exports.cart = (function() {
 				return merged;
 			})();
 
-            const subTotal = mergedCartItems.reduce(function (prevVal, elem) {
+            const subTotal = mergedCartItems.reduce((prevVal, elem) => {
 				return prevVal + (elem.qty * elem.price);
-			},0);
+			}, 0);
 
             const shipping = (subTotal * 0.1);
 
@@ -266,7 +266,7 @@ exports.cart = (function() {
 			};
 			callback(null, obj);
 		});
-	};
+	});
 
 	return {
 		cartItemTotal: findProducts
