@@ -3,7 +3,7 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
-var Product = require('../models/product');
+const Product = require('../models/product');
 
 exports.stateList = (function() {
 	var newArray = [];
