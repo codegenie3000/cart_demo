@@ -8,16 +8,22 @@ require('dotenv').config();
 const express = require('express');
 const exphbs = require('express-handlebars');
 const helpers = require('./lib/helpers');
+const mongoose = require('mongoose');
+
+//Use native promises
+mongoose.Promise= global.Promise;
 
 //Set up mongoose connection
-const mongoose = require('mongoose');
 const dbURL = process.env.DB_HOST,
 	user = process.env.DB_USER,
 	pw = process.env.DB_PASS;
 const dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;
-mongoose.connect(dbURI);
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+const promise = mongoose.connect(dbURI, {
+    useMongoClient: true
+});
+promise.then(function(db) {
+    db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+});
 
 const path = require('path');
 const favicon = require('serve-favicon');
