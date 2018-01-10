@@ -8,10 +8,11 @@ const path = require('path');
 module.exports = {
     entry: './src/main.js',
     module: {
-        loaders: [
+        rules: [
             {
+                test: /\.js$/,
                 loader: 'babel-loader',
-                query:  {
+                options:  {
                     presets: ['es2015']
                 }
             }
