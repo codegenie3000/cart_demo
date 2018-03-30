@@ -1,4 +1,4 @@
-{{> head_cart }}
+{{> header }}
 
 <body id="checkout" class="card-entry">
 {{> top_menu }}
@@ -59,7 +59,18 @@
 	</div>
 </div>
 
-{{> information_not_complete }}
+<div id="info-missing-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <p class="lead" id="modal-message"></p>
+                    <a href="" class="modal-url"><button class="btn btn-lg btn-primary" id="button-message"></button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{> spinner }}
 {{> scripts }}

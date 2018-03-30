@@ -13,7 +13,8 @@ const app = require('../app');
 const fs = require('fs');
 const debug = require('debug')('demo-cart:server');
 const https = require('https');
-// var http = require('http');
+const http = require('http');
+let server;
 
 /**
  * Get port from environment and store in Express.
@@ -25,17 +26,19 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-// var server = http.createServer(app);
 
-/* Create HTTPS server */
-const options = {
-	key: fs.readFileSync('../../server.key'),
-    cert: fs.readFileSync('../../server.crt'),
-    requestCert: false,
-    rejectUnauthorized: false
-};
-
-const server = https.createServer(options, app);
+if (process.env.SECURE === 'true') {
+    // Create and run https server
+    const options = {
+        key: fs.readFileSync('../../server.key'),
+        cert: fs.readFileSync('../../server.crt'),
+        requestCert: false,
+        rejectUnauthorized: false
+    };
+    server = https.createServer(options, app);
+} else {
+    server = http.createServer(app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.

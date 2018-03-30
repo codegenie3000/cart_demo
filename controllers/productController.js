@@ -23,33 +23,31 @@ exports.product_list = function(req, res, next) {
 };*/
 
 exports.index = function(req, res, next) {
-	Product.find({})
-		.exec((err, list_products) => {
-			// Diplay title, decimal price, and main image
-			if (err) { return next(err)}
-			res.render('home', {
+    Product.find({}, function(err, allProducts) {
+        if (err) {
+            return next(err)
+        } else {
+            res.render('home', {
 				pageName: 'Catalog',
 				general: {
-					home: true
-				},
-				headline: 'Amazing products',
-				product: list_products
-			});
-		});
+				    home: true
+                },
+                product: allProducts
+            });
+        }
+    });
 };
 
 exports.product_detail = function (req, res, next) {
-	Product.findById(req.params.id)
-		.exec((err, product) => {
-			if (err)
-				return next(err);
-			const imageArray = product.imageURLArray;
-			res.render('product_detail', {
-				product_data: product,
-				images: imageArray
-				// title: product.title
-			});
-		});
+	Product.findById(req.params.id, (err, product) => {
+        if (err)
+            return next(err);
+        res.render('product_detail', {
+            pageName: product.title,
+            product_data: product,
+            // images: product.imageURLArray
+        });
+    });
 };
 
 exports.add_to_cart = function (req, res, next) {
