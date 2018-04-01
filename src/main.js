@@ -32,7 +32,7 @@ const features = {
 };
 
 const productDetail = {
-    addToCart: function () {
+    /*addToCart: function () {
         $('#add-to-cart').submit(function(e) {
             const productClassName = this.classList[1];
             const productId = /product-(\S+)/g.exec(productClassName)[1];
@@ -51,7 +51,7 @@ const productDetail = {
                 }
             });
         });
-    }
+    }*/
 };
 
 const cart = {
@@ -62,7 +62,7 @@ const cart = {
                 const itemQty = parseInt(this.value);
                 const itemId = /qtySelectItem(\S*)/.exec(this.id)[1];
                 return {
-                    itemId: itemId,
+                    id: itemId,
                     qty: itemQty
                 }
             }.bind(this))();
@@ -351,9 +351,9 @@ const modalAjaxHandler = {
 $(function () {
     const emailAddressRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
-    if (document.getElementsByClassName('product-detail')) {
+    /*if (document.getElementsByClassName('product-detail')) {
         productDetail.addToCart();
-    }
+    }*/
 
     if (document.getElementById('cart')) {
         cart.changeQty();

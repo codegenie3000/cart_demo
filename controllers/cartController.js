@@ -21,95 +21,87 @@ const ControllerHelpers = require('./controllerHelpers');
 
 const modalHelpers = ControllerHelpers.modals;
 
-exports.index = function(req, res, next) {
+exports.index = function(req, res) {
+    console.log('reached');
 	if (req.session.itemQty) {
-		//TODO convert into modules
-        const cartItems = req.session.itemQty;
-		let itemsInCart = [];
+	    const sessionItemArray = req.session.itemQty;
 
-		if (cartItems.length > 0) {
-			itemsInCart = cartItems.map(item => {
-				return item.itemId;
-			});
-			Product.find({
-				_id: {$in: itemsInCart}
-			}, function(err, catalogItems) {
+        if (sessionItemArray && sessionItemArray.length > 0) {
+	        const cartIdArr = sessionItemArray.map(item => {
+	            return item.id;
+            });
+	        Product.find({
+                _id: {$in: cartIdArr}
+            }, (err, catalogItems) => {
+	            const mergedCartItems = (function () {
+	                const mergedItems = [];
+	                catalogItems.forEach((catalogItem) => {
+	                    sessionItemArray.forEach((sessionItem) => {
+	                        if (catalogItem.id === sessionItem.id) {
+	                            mergedItems.push({
+                                    _id: catalogItem.id,
+                                    qty: sessionItem.qty,
+                                    price: catalogItem.price,
+                                    title: catalogItem.title,
+                                    mainImage: catalogItem.mainImage
+                                });
+                            }
+                        });
+                    });
+	                return mergedItems;
+                })();
+	            const subTotal = mergedCartItems.reduce((acc, currVal) => {
+	                return acc + (currVal.qty * currVal.price);
+                }, 0);
 
-				const mergedCartItems = (function() {
-					const merged = [];
+	            const shipping = 5 + (subTotal * 0.02);
 
-					for (let i = 0; i < catalogItems.length; i++) {
-						cartItems.forEach(cartItem => {
-							if (cartItem.itemId === catalogItems[i].id) {
-								catalogItems[i]['qty'] = cartItem.qty;
-								merged.push(catalogItems[i]);
-							}
-						});
-					}
-					return merged;
-				})();
+	            const total = subTotal + shipping;
+	            console.log(mergedCartItems);
 
-				const subTotal = mergedCartItems.reduce((prevVal, elem) => {
-					return prevVal + (elem.qty * elem.price);
-				}, 0);
-
-                const shipping = (subTotal * 0.2);
-
-                const total = subTotal + shipping;
-
-				//TODO create regex and convert number to decimal and comma format
-				console.log('ran with calc', subTotal.toString());
-				res.render('cart', {
-					itemsInCart: true,
-					cartItems: mergedCartItems,
-					subTotal: subTotal.toString(),
-					shipping: shipping.toString(),
-					total: total.toString(),
-					general: {
-						cart: true
-					},
-					pageName: 'Your cart'
-				});
-			});
-		} else {
-			res.render('cart', {
-				itemsInCart: false,
-				general: {
-					cart: true
-				},
-				pageName: 'Your cart'
-			});
-		}
-	} else {
-		res.render('cart', {
-			itemsInCart: false,
-			general: {
-				cart: true
-			},
-			pageName: 'Your cart'
-		});
+	            res.render('cart', {
+	                itemsInCart: true,
+                    cartItems: mergedCartItems,
+                    subTotal: subTotal.toString(),
+                    shipping: shipping.toString(),
+                    total: total.toString(),
+                    general: {
+	                    cart: true
+                    },
+                    pageName: 'Your cart'
+                });
+            });
+        } else {
+            res.render('cart', {
+                itemsInCart: false,
+                general: {
+                    cart: true
+                },
+                pageName: 'Your cart'
+            });
+        }
 	}
 };
 
-exports.change_qty = function(req, res, next) {
+exports.change_qty = function(req, res) {
 	// TODO sanitize data
 	// var itemObj = JSON.parse(req.body.data);
 	// var sessionArray = req.session.itemQty;
     const itemObj = req.body;
     const sessionArray = req.session.itemQty;
 	for (let i = 0; i < sessionArray.length; i++) {
-		if (sessionArray[i].itemId === itemObj.itemId) {
+		if (sessionArray[i].id === itemObj.id) {
 			sessionArray[i].qty = parseInt(itemObj.qty);
 		}
 	}
 	req.session.save(function (err) {
 		if (err)
-			return next(err);
+			console.log(err);
 		res.send('/cart');
 	});
 };
 
-exports.remove_product = function(req, res, next) {
+exports.remove_product = function(req, res) {
     const productId = req.params.id;
     const itemQtyArr = req.session.itemQty;
 	// loop through session array
@@ -118,19 +110,19 @@ exports.remove_product = function(req, res, next) {
 	// use splice to remove that element
 
     const index = itemQtyArr.findIndex(function (element) {
-		return element.itemId === productId;
+		return element.id === productId;
 	});
 	itemQtyArr.splice(index, 1);
 	req.session.itemQty = itemQtyArr;
 	req.session.save(err => {
 		if (err)
-			return next(err);
+			console.log(err);
 		res.redirect('/cart');
 	});
 	// res.redirect('/');
 };
 
-exports.submitBillingData = function(req, res, next) {
+exports.submitBillingData = function(req, res) {
 	req.checkBody('billingAddress', 'billing address must be received').notEmpty();
 	req.sanitize('billingAddress');
 
@@ -179,7 +171,7 @@ exports.submitBillingData = function(req, res, next) {
 	req.session.save(function (err) {
 		console.log('saved');
 		if (err)
-			return next(err);
+			return console.log(err);
 
         const checkout02URL = '/cart/shipping';
         const checkout03URL = '/cart/confirmation';
@@ -214,7 +206,7 @@ exports.billing = function(req, res, next) {
 	}
 };
 
-exports.billingIsReady = function(req, res, next) {
+exports.billingIsReady = function(req, res) {
     const session = req.session;
     if (session.hasOwnProperty('itemQty') && session.itemQty.length > 0) {
         res.send({allClear: 'true'});
@@ -247,7 +239,7 @@ exports.shipping = function(req, res, next) {
 	}
 };
 
-exports.shippingIsReady = function(req, res, next) {
+exports.shippingIsReady = function(req, res) {
     const sess = req.session;
     if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0) {
         if (sess.billingAddress) {
@@ -260,7 +252,7 @@ exports.shippingIsReady = function(req, res, next) {
     }
 };
 
-exports.confirmationIsReady = function(req, res, next) {
+exports.confirmationIsReady = function(req, res) {
     const sess = req.session;
     if (sess.hasOwnProperty('itemQty') && sess.itemQty.length > 0 && sess.billingAddress && sess.shippingAddress) {
         res.send({allClear: 'true'});
@@ -277,7 +269,7 @@ exports.confirmationIsReady = function(req, res, next) {
     }
 };
 
-exports.submitShippingData = function(req, res, next) {
+exports.submitShippingData = function(req, res) {
 	req.checkBody('shippingAddress', 'shipping address must be received').notEmpty();
 	req.sanitize('shippingAddress');
 
@@ -305,13 +297,13 @@ exports.submitShippingData = function(req, res, next) {
 	// Create this as a module later
 	req.session.save(err => {
 		console.log('saved shipping address');
-		if (err) return next(err);
+		if (err) console.log(err);
 
 		res.send('/cart/confirmation');
 	});
 };
 
-exports.checkoutConfirmation = function(req, res, next) {
+exports.checkoutConfirmation = function(req, res) {
 	// session.itemQty is array with [{itemId: ..., qty: 2}, {...}]
 	if (req.session) {
 
@@ -426,7 +418,7 @@ exports.checkoutConfirmation = function(req, res, next) {
 	}
 };
 
-exports.payment = function(req, res, next) {
+exports.payment = function(req, res) {
 	if (req.session) {
 		if (req.session.billingAddress) {
             const addressFields = (function() {
@@ -573,7 +565,7 @@ exports.stripePost = function(req, res, next) {
 	}
 };
 
-exports.success = function(req, res, next) {
+exports.success = function(req, res) {
 	const session = req.session;
 	const orderId = session.orderId;
 	res.render('order_confirmation', {

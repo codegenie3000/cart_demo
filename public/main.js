@@ -106,26 +106,26 @@ var features = {
 };
 
 var productDetail = {
-    addToCart: function addToCart() {
-        (0, _jquery2.default)('#add-to-cart').submit(function (e) {
-            var productClassName = this.classList[1];
-            var productId = /product-(\S+)/g.exec(productClassName)[1];
-            var qtySelected = { qtySelect: this[0].value };
-            var uri = '/product/' + productId;
-            _jquery2.default.ajax(uri, {
+    /*addToCart: function () {
+        $('#add-to-cart').submit(function(e) {
+            const productClassName = this.classList[1];
+            const productId = /product-(\S+)/g.exec(productClassName)[1];
+            const qtySelected = {qtySelect: this[0].value};
+            const uri = '/product/' + productId;
+            $.ajax(uri, {
                 data: JSON.stringify(qtySelected),
                 method: 'POST',
                 contentType: 'application/json',
                 dataType: 'text',
-                success: function success(data) {
+                success: function (data) {
                     window.location = data;
                 },
-                error: function error(err) {
+                error: function (err) {
                     console.log(err);
                 }
             });
         });
-    }
+    }*/
 };
 
 var cart = {
@@ -136,7 +136,7 @@ var cart = {
                 var itemQty = parseInt(this.value);
                 var itemId = /qtySelectItem(\S*)/.exec(this.id)[1];
                 return {
-                    itemId: itemId,
+                    id: itemId,
                     qty: itemQty
                 };
             }.bind(this)();
@@ -425,9 +425,9 @@ var modalAjaxHandler = {
 (0, _jquery2.default)(function () {
     var emailAddressRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
-    if (document.getElementsByClassName('product-detail')) {
+    /*if (document.getElementsByClassName('product-detail')) {
         productDetail.addToCart();
-    }
+    }*/
 
     if (document.getElementById('cart')) {
         cart.changeQty();

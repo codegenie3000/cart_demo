@@ -11,8 +11,8 @@ const router = express.Router();
 
 const productController = require('../controllers/productController');
 
-router.get('/:id', productController.product_detail);
+router.get('/:id', productController.productDetail);
 
-router.post('/:id', productController.add_to_cart);
+router.post('/:id', productController.addToCart);
 
 module.exports = router;

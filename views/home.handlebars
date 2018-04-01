@@ -1,6 +1,6 @@
 {{> header }}
 
-<body id="home">
+<section id="home">
     <section class="container">
         <div class="row">
             <div class="col-sm-12">
@@ -12,7 +12,7 @@
     </section>
 
     <section class="container" style="margin-top: 10px;">
-        {{#home_product 3 product}}
+        {{#home_product 3 products}}
             <div class="row">
                 {{#each this}}
                     <div class="col-sm-4 text-center">
@@ -26,4 +26,6 @@
         {{/home_product}}
     </section>
     {{> scripts }}
-</body>
+</section>
+
+{{> footer }}

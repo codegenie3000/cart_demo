@@ -9,6 +9,9 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const helpers = require('./lib/helpers');
 const mongoose = require('mongoose');
+const index = require('./routes/index');
+const cart = require('./routes/cart');
+const products = require('./routes/products');
 
 //Use native promises
 mongoose.Promise= global.Promise;
@@ -37,10 +40,6 @@ const expressValidator = require('express-validator');
 // express-session
 const session = require('express-session');
 // var stripe = require('stripe')(process.env.STRIPE_SECRET);
-
-const index = require('./routes/index');
-const products = require('./routes/products');
-const cart = require('./routes/cart');
 
 const app = express();
 
@@ -76,7 +75,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/product', products);
+app.use('/products', products);
 app.use('/cart', cart);
 
 // error route
