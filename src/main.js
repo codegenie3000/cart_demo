@@ -4,8 +4,6 @@
  */
 
 import $ from 'jquery';
-// test comment
-
 
 const overlay = (function() {
     const fadeIn = function() {
@@ -329,10 +327,6 @@ const modalAjaxHandler = {
 
 $(function () {
     const emailAddressRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-
-    /*if (document.getElementsByClassName('product-detail')) {
-        productDetail.addToCart();
-    }*/
 
     if (document.getElementById('cart')) {
         cart.changeQty();
