@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 
-gulp.task('copyToPublic', ['css', 'publicImages'], () => {
-   // nothing here
+gulp.task('watch', () => {
+    gulp.watch('src/style.css', ['css']);
 });
 
 gulp.task('css', () => {

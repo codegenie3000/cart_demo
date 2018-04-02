@@ -3,6 +3,20 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
+.footer {
+    background-color: #333333;
+    color: white;
+    padding: 20px;
+}
+
+.add-height {
+    min-height: 800px;
+}
+
+.footer {
+    margin-top: 50px;
+}
+
 .fotorama__wrap {
     margin: 0 auto;
 }

@@ -54,6 +54,7 @@ exports.index = function(req, res) {
 	                return acc + (currVal.qty * currVal.price);
                 }, 0);
 
+	            //TODO convert numbers to dollar format
 	            const shipping = 5 + (subTotal * 0.02);
 
 	            const total = subTotal + shipping;
@@ -80,7 +81,15 @@ exports.index = function(req, res) {
                 pageName: 'Your cart'
             });
         }
-	}
+	} else {
+	    res.render('cart', {
+	        itemsInCart: false,
+            general: {
+	            cart: true
+            },
+            pageName: 'Your cart'
+        });
+    }
 };
 
 exports.change_qty = function(req, res) {
