@@ -82,5 +82,5 @@ cmake-build-debug/
 .idea/**/mongoSettings.xml
 
 # Other
-.vscode/*
-#public/*
+.vscode/
+public/
