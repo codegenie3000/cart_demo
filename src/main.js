@@ -4,6 +4,8 @@
  */
 
 import $ from 'jquery';
+// test comment
+
 
 const overlay = (function() {
     const fadeIn = function() {
@@ -29,29 +31,6 @@ const features = {
         const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
         return emailRegex.test(formInput);
     }
-};
-
-const productDetail = {
-    /*addToCart: function () {
-        $('#add-to-cart').submit(function(e) {
-            const productClassName = this.classList[1];
-            const productId = /product-(\S+)/g.exec(productClassName)[1];
-            const qtySelected = {qtySelect: this[0].value};
-            const uri = '/product/' + productId;
-            $.ajax(uri, {
-                data: JSON.stringify(qtySelected),
-                method: 'POST',
-                contentType: 'application/json',
-                dataType: 'text',
-                success: function (data) {
-                    window.location = data;
-                },
-                error: function (err) {
-                    console.log(err);
-                }
-            });
-        });
-    }*/
 };
 
 const cart = {

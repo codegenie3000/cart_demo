@@ -22,7 +22,9 @@ const ControllerHelpers = require('./controllerHelpers');
 const modalHelpers = ControllerHelpers.modals;
 
 exports.index = function(req, res) {
-    console.log('reached');
+    function convertTwoDecimals(num) {
+        return Math.round(num * 100) / 100;
+    }
 	if (req.session.itemQty) {
 	    const sessionItemArray = req.session.itemQty;
 
@@ -50,22 +52,22 @@ exports.index = function(req, res) {
                     });
 	                return mergedItems;
                 })();
-	            const subTotal = mergedCartItems.reduce((acc, currVal) => {
+	            let subTotal = mergedCartItems.reduce((acc, currVal) => {
 	                return acc + (currVal.qty * currVal.price);
                 }, 0);
 
-	            //TODO convert numbers to dollar format
-	            const shipping = 5 + (subTotal * 0.02);
+	            subTotal = convertTwoDecimals(subTotal);
 
-	            const total = subTotal + shipping;
-	            console.log(mergedCartItems);
+	            const shipping = convertTwoDecimals(5 + (subTotal * 0.02));
+
+	            const total = convertTwoDecimals(subTotal + shipping);
 
 	            res.render('cart', {
 	                itemsInCart: true,
                     cartItems: mergedCartItems,
-                    subTotal: subTotal.toString(),
-                    shipping: shipping.toString(),
-                    total: total.toString(),
+                    subTotal: subTotal.toFixed(2),
+                    shipping: shipping.toFixed(2),
+                    total: total.toFixed(2),
                     general: {
 	                    cart: true
                     },
