@@ -1,11 +1,31 @@
-{{> head_general }}
+{{> header }}
 
-<body id="home">
-    {{> top_menu}}
+<section id="home">
+    <section class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Check out our amazing products!</h1>
+                <img src="beach01.jpeg" id="beach_lg" class="img-responsive" alt="large beach image">
+                <!--<img src="beach_small.jpg" id="beach_sm" class="img-responsive" alt="small beach image">-->
+            </div>
+        </div>
+    </section>
 
-    {{> home_content }}
-
-    {{> home_product_display }}
-
+    <section class="container" style="margin-top: 10px;">
+        {{#home_product 3 products}}
+            <div class="row">
+                {{#each this}}
+                    <div class="col-sm-4 text-center">
+                        <a href="{{url}}">
+                            <img src="https://{{mainImage}}" class="img-responsive img-rounded" alt="main image">
+                        </a>
+                        <p class="lead">{{title}}</p>
+                    </div>
+                {{/each}}
+            </div>
+        {{/home_product}}
+    </section>
     {{> scripts }}
-</body>
+</section>
+
+{{> footer }}

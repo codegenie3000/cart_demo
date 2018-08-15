@@ -1,9 +1,16 @@
 /*
+ * Copyright (c) 2018. Jonathan Peralez - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ */
+
+/*
  * Copyright (c) 2017. Jonathan Peralez - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
 import $ from 'jquery';
+// test comment
+
 
 const overlay = (function() {
     const fadeIn = function() {
@@ -31,29 +38,6 @@ const features = {
     }
 };
 
-const productDetail = {
-    addToCart: function () {
-        $('#add-to-cart').submit(function(e) {
-            const productClassName = this.classList[1];
-            const productId = /product-(\S+)/g.exec(productClassName)[1];
-            const qtySelected = {qtySelect: this[0].value};
-            const uri = '/product/' + productId;
-            $.ajax(uri, {
-                data: JSON.stringify(qtySelected),
-                method: 'POST',
-                contentType: 'application/json',
-                dataType: 'text',
-                success: function (data) {
-                    window.location = data;
-                },
-                error: function (err) {
-                    console.log(err);
-                }
-            });
-        });
-    }
-};
-
 const cart = {
     changeQty: function () {
         $('#cart').find('select.change-qty').change(function (e) {
@@ -62,7 +46,7 @@ const cart = {
                 const itemQty = parseInt(this.value);
                 const itemId = /qtySelectItem(\S*)/.exec(this.id)[1];
                 return {
-                    itemId: itemId,
+                    id: itemId,
                     qty: itemQty
                 }
             }.bind(this))();
@@ -351,9 +335,9 @@ const modalAjaxHandler = {
 $(function () {
     const emailAddressRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
-    if (document.getElementsByClassName('product-detail')) {
+    /*if (document.getElementsByClassName('product-detail')) {
         productDetail.addToCart();
-    }
+    }*/
 
     if (document.getElementById('cart')) {
         cart.changeQty();

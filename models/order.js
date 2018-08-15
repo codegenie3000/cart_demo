@@ -36,7 +36,7 @@ const OrderSchema = Schema(
 		// salesTaxAmount: {type: Number, required: true},
 		totalAmount: {type: Number, required: true},
 		items: [
-			{itemId: {type: String, required: true}},
+			{id: {type: String, required: true}},
 			{qty: {type: Number, required: true}}
 		]
 	}

@@ -71,7 +71,7 @@ describe('/PUT cart - change qty', function() {
     it('should return a 200', function(done) {
         agent
             .put('/cart/change_qty')
-            .send({'itemId': '5930ab5b3488d916dc515420', 'qty': '5'})
+            .send({'id': '5930ab5b3488d916dc515420', 'qty': '5'})
             .end(function(err, res) {
                 res.should.have.status(200);
                 res.text.should.equal('/cart');

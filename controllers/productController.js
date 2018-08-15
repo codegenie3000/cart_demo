@@ -9,78 +9,63 @@
 
 const Product = require('../models/product');
 
-/*
-exports.product_list = function(req, res, next) {
-	Product.find()
-		.sort([ [ 'title', 'ascending' ] ])
-		.exec(function (err, list_products) {
-			if (err) {return next(err);}
-			
-			res.render('./partials/home_product_display', {
-				product_display: list_products
-			});
-		});
-};*/
-
 exports.index = function(req, res, next) {
-	Product.find({})
-		.exec((err, list_products) => {
-			// Diplay title, decimal price, and main image
-			if (err) { return next(err)}
-			res.render('home', {
+    Product.find({}, function(err, allProducts) {
+        if (err) {
+            return next(err)
+        } else {
+            res.render('home', {
 				pageName: 'Catalog',
-				general: {
-					home: true
-				},
-				headline: 'Amazing products',
-				product: list_products
-			});
-		});
+                products: allProducts
+            });
+        }
+    });
 };
 
-exports.product_detail = function (req, res, next) {
-	Product.findById(req.params.id)
-		.exec((err, product) => {
-			if (err)
-				return next(err);
-			const imageArray = product.imageURLArray;
-			res.render('product_detail', {
-				product_data: product,
-				images: imageArray
-				// title: product.title
-			});
+exports.productDetail = function (req, res, next) {
+	Product.findById(req.params.id, (err, product) => {
+		if (err)
+			return next(err);
+		res.render('product_detail', {
+			product: product
 		});
+	});
 };
 
-exports.add_to_cart = function (req, res, next) {
+exports.addToCart = function (req, res, next) {
 	req.checkBody('qtySelect', 'Quantity must be specified.').notEmpty();
 	req.sanitize('qtySelect');
-	const itemObject = (function() {
-        const productId =  req.params.id;
-        const qtySelected = parseInt(req.body.qtySelect);
-		return { itemId: productId, qty: qtySelected};
-	})();
-    const sess = req.session;
-    const sessionItemArray = sess.itemQty;
+
+	const addedToCart = {
+	    id: req.params.id,
+        qty: parseInt(req.body.qtySelect)
+    };
+
+	// const itemObject = (function() {
+     //    const productId =  req.params.id;
+     //    const qtySelected = parseInt(req.body.qtySelect);
+	// 	return { itemId: productId, qty: qtySelected};
+	// })();
+    const sessionItemArray = req.session.itemQty;
 	if (sessionItemArray) {
         let found = false;
 		sessionItemArray.forEach(item => {
-			if (item.itemId === itemObject.itemId) {
-				item.qty += itemObject.qty;
+			if (item.id === addedToCart.id) {
+				item.qty += addedToCart.qty;
 				found = true;
 			}
 		});
 		if (!found) {
-			sessionItemArray.push(itemObject);
+			sessionItemArray.push(addedToCart);
 		}
 	} else {
-		sess.itemQty = [itemObject];
+		req.session.itemQty = [addedToCart];
 	}
 	req.session.save(err => {
 		if (err) {
-			return next(err);
+			console.log(err);
 		} else {
-			res.send('/cart');
+			res.redirect('/cart');
 		}
 	});
 };

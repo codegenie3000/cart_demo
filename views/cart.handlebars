@@ -1,13 +1,99 @@
-{{> head_cart }}
+{{> header }}
 
-<body id="cart">
-    {{> top_menu }}
+<section id="cart">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-sm-12">
+                <h1>Cart</h1>
+            </div>
+        </div>
+        <div class="row cart-hide-not-desktop">
+            <div class="col-sm-6">
+                <p>Item</p>
+            </div>
+            <div class="col-sm-3">
+                <p>Price</p>
+            </div>
+            <div class="col-sm-3 text-right">
+                <p>Qty</p>
+            </div>
+        </div>
+        <hr>
+    </div>
 
-    {{> cart_heading }}
+    <div class="container">
+        {{#each cartItems}}
+            <div class="row product-row">
+                <div class="col-xs-8 col-sm-6 match-cart-height">
+                    <img src="https://{{mainImage}}" class="cart-thumb">{{title}}
+                </div>
+                <div class="col-xs-4 col-sm-3 match-cart-height">
+                    <span class="test">{{price}}</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 match-cart-height">
+                    <div class="form-group match-height align-when-768">
+                        <label for="qtySelectItem{{_id}}" hidden>Select Quantity</label>
 
-    {{> cart_items }}
+                        <select class="form-control change-qty" id="qtySelectItem{{_id}}">
+                            <option {{cart_qty 1 qty}}>1</option>
+                            <option {{cart_qty 2 qty}}>2</option>
+                            <option {{cart_qty 3 qty}}>3</option>
+                            <option {{cart_qty 4 qty}}>4</option>
+                            <option {{cart_qty 5 qty}}>5</option>
+                            <option {{cart_qty 6 qty}}>6</option>
+                            <option {{cart_qty 7 qty}}>7</option>
+                            <option {{cart_qty 8 qty}}>8</option>
+                            <option {{cart_qty 9 qty}}>9</option>
+                            <option {{cart_qty 10 qty}}> 10</option>
+                        </select>
+                        <a href="/cart/remove/{{_id}}" class="delete-button">delete</a>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 
-    {{> cart_summary }}
+    <div class="container text-right">
+        {{#if itemsInCart}}
+            <div class="row add-space">
+                <div class="col-sm-3 col-sm-offset-6">
+                    Subtotal:
+                </div>
+                <div class="col-sm-3">
+                    {{subTotal}}
+                </div>
+            </div>
+            <div class="row add-space">
+                <div class="col-sm-3 col-sm-offset-6">
+                    Shipping:
+                </div>
+                <div class="col-sm-3">
+                    {{shipping}}
+                </div>
+            </div>
+            <div class="row add-space">
+                <div class="col-sm-3 col-sm-offset-6">
+                    Total:
+                </div>
+                <div class="col-sm-3">
+                    {{total}}
+                </div>
+            </div>
+        {{else}}
+            <div class="row add-space add-height">
+                <div class="col-sm-12 text-center">You don't have any items in your cart.</div>
+            </div>
+        {{/if}}
+        {{#if itemsInCart}}
+            <div class="row add-space">
+                <div class="col-sm-3 col-sm-offset-9">
+                    <button type="button" class="btn btn-primary" id="checkOut">Check Out</button>
+                </div>
+            </div>
+        {{/if}}
+    </div>
 
     {{> scripts }}
-</body>
+</section>
+
+{{> footer }}

@@ -6,7 +6,7 @@
 /**
  * Created by jonathan on 6/14/17.
  */
-exports.about = function(req, res, next) {
+exports.about = function(req, res) {
 	res.render('about', {
 		general: {
 			about: true
