@@ -83,5 +83,6 @@ cmake-build-debug/
 
 # Other
 .vscode/*
-#public/*
-/public/main.js.map
+public/*
+#/public/main.js.map
+#/public/main.js
