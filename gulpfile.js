@@ -15,23 +15,13 @@ gulp.task('publicImages', () => {
         .pipe(gulp.dest('./public/'));
 });*/
 
-const {series, parallel, src, dest} = require('gulp');
+const {watch, parallel, series, src, dest} = require('gulp');
 
-const gulp = require('gulp');
-
-function defaultTask(cb) {
-    cb();
-}
-
-// private task
-function build(cb) {
-    cb();
-}
+// const gulp = require('gulp');
 
 function cssToPublic() {
     return src('src/style.css')
         .pipe(dest('./public/'));
-    // cb();
 }
 
 function imagesToPublic() {
@@ -39,7 +29,27 @@ function imagesToPublic() {
         .pipe(dest('./public/'));
 }
 
-exports.build = parallel(cssToPublic, imagesToPublic);
+/*function watchCSS() {
+    watch('src/style.css', cssToPublic);
+}*/
+
+function watchCSS() {
+    const watcher = watch('src/style.css', cssToPublic);
+    watcher.on('change', function() {
+        console.log('ran');
+    });
+}
+
+const watcher = watch('src/style.css', cssToPublic);
+watcher.on('change', function(path) {
+    console.log('File ' + path + ' was changed');
+});
+
+// const build = series(parallel(cssToPublic, imagesToPublic), watchCSS);
+
+const build = series(imagesToPublic, watchCSS);
+
+exports.build = build;
 
 /*function watchCSS() {
 
