@@ -9,6 +9,7 @@
     "webpack": "webpack",
     "gulp": "gulp build"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codegenie3000/cart_demo.git"
