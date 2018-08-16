@@ -20,7 +20,7 @@ const dbURL = process.env.DB_HOST,
 	pw = process.env.DB_PASS;
 const dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;
 
-mongoose.connect(dbURI);
+mongoose.connect(dbURI, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 
