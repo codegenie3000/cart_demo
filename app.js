@@ -13,19 +13,20 @@ const index = require('./routes/index');
 const cart = require('./routes/cart');
 const products = require('./routes/products');
 
-//Use native promises
-mongoose.Promise= global.Promise;
 
 //Set up mongoose connection
 const dbURL = process.env.DB_HOST,
 	user = process.env.DB_USER,
 	pw = process.env.DB_PASS;
 const dbURI = 'mongodb://' + user + ':' + pw + '@' + dbURL;
-const promise = mongoose.connect(dbURI, {
-    useMongoClient: true
-});
-promise.then(function(db) {
-    db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+mongoose.connect(dbURI);
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error'));
+db.once('open', () => {
+    console.log('db connected');
 });
 
 const path = require('path');
