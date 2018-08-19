@@ -82,7 +82,5 @@ cmake-build-debug/
 .idea/**/mongoSettings.xml
 
 # Other
-.vscode/*
+.vscode/
 public/
-#/public/main.js.map
-#/public/main.js
