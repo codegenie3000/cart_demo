@@ -11,10 +11,15 @@
     </div>
 <div class="row">
 <div class="col-sm-12">
-    <div class="fotorama" data-width="50%" data-ratio="600/600">
+    <div class="slideshow-container">
         {{#each product.imageURLArray}}
-            <img src="{{image}}">
+            <div class="slide">
+                <img class="slideshow-image" src="{{image}}" />
+            </div>
         {{/each}}
+
+        <span class="prev" onclick="slideShowModule.prevSlide()">&#60;</span>
+        <span class="next" onclick="slideShowModule.nextSlide()">&#62;</span>
     </div>
     {{#with product}}
     </div>
@@ -49,7 +54,6 @@
 </div>
 
     {{> scripts }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.min.js"></script>
 </section>
 
 {{> footer }}

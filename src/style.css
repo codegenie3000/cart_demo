@@ -17,10 +17,6 @@
     margin-top: 50px;
 }
 
-.fotorama__wrap {
-    margin: 0 auto;
-}
-
 img.cart-thumb {
     width: 100px;
     margin-right: 10px;
@@ -68,6 +64,50 @@ div.align-when-768 {
     div.cart-hide-not-desktop {
         display:none;
     }
+}
+
+img.slideshow-image {
+    width: 100%;
+}
+
+.slideshow-container {
+    max-width: 500px;
+    position: relative;
+    margin: auto;
+}
+
+.slide {
+    top: -1000px;
+    height: 0;
+    width: 0;
+    /* display: hidden; */
+    opacity: .4;
+    transition: opacity .5s linear 200ms;
+}
+
+.show-image {
+    top: 0;
+    display: inline;
+    opacity: 1;
+    transition: opacity .5s linear;
+}
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    margin-top: -22px;
+    color: white;
+    font-weight: white;
+    font-size: 20px;
+}
+
+.next {
+    right: 0;
+    margin-right: 10px;
+}
+
+.prev {
+    margin-left: 10px;
 }
 
 /* Spinner */

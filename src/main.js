@@ -9,8 +9,6 @@
  */
 
 import $ from 'jquery';
-// test comment
-
 
 const overlay = (function() {
     const fadeIn = function() {
@@ -366,5 +364,44 @@ $(function () {
         $.ajax('/cart/confirmation/checkIfReady', modalAjaxHandler);
         paymentFunc.init();
         paymentFunc.submitListener();
+    }
+
+    if (document.getElementById('productDetail')) {
+        window.slideShowModule = (function() {
+            const imageNodeArray = document.querySelectorAll(
+                '.slideshow-container > .slide'
+            );
+
+            let currentSlide = 0;
+
+            const numOfSlides = imageNodeArray.length - 1;
+
+            imageNodeArray[0].classList.add('show-image');
+
+            const _nextSlide = function() {
+                if (currentSlide < numOfSlides) {
+                    /* imageNodeArray[currentSlide + 1].classList.add('show')
+                    imageNodeArray[currentSlide].classList.remove('show'); */
+                    imageNodeArray[currentSlide + 1].classList.add('show-image');
+                    imageNodeArray[currentSlide].classList.remove('show-image');
+                    // _incrementSlide();
+                    currentSlide += 1;
+                }
+            };
+
+            const _prevSlide = function() {
+                if (currentSlide > 0) {
+                    imageNodeArray[currentSlide - 1].classList.add('show-image');
+                    imageNodeArray[currentSlide].classList.remove('show-image');
+                    // _decrementSlide();
+                    currentSlide -= 1;
+                }
+            };
+
+            return {
+                nextSlide: _nextSlide,
+                prevSlide: _prevSlide
+            }
+        })();
     }
 });
