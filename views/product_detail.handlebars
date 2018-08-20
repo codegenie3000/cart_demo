@@ -30,25 +30,26 @@
             </div>
         </div>
         <div class="row text-center">
-            <!--<form id="add-to-cart" class="form-inline" method="POST" action="">-->
-            <form class="form-inline" action="/products/{{id}}" method="POST">
-                <div class="form-group">
-                    <label for="qtySelect">Qty:</label>
-                    <select class="form-control" id="qtySelect" name="qtySelect">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
-                    </select>
-                    <button class="btn btn-primary">Add to Cart</button>
-                </div>
-            </form>
+            <div class="col-sm-12">
+                <form class="form-inline" action="/products/{{id}}" method="POST">
+                    <div class="form-group">
+                        <label for="qtySelect">Qty:</label>
+                        <select class="form-control" id="qtySelect" name="qtySelect">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                        </select>
+                        <button class="btn btn-primary">Add to Cart</button>
+                    </div>
+                </form>
+            </div>
         </div>
     {{/with}}
 </div>
