@@ -2,7 +2,7 @@
   "name": "cart_demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bin/www.js",
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
