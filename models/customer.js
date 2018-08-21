@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2017. Jonathan Peralez - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- */
-
 const mongoose = require('mongoose');
 
 // const moment = require('moment');

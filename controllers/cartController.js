@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2017. Jonathan Peralez - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- */
-
-/**
- * Created by jonathan on 6/14/17.
- */
-
 const mailgunKey = process.env.MAILGUN_SECRET;
 const mailgunDomain = process.env.MAILGUN_DOMAIN;
 const mailgun = require('mailgun-js')({apiKey: mailgunKey, domain: mailgunDomain});
