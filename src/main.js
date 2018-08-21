@@ -1,13 +1,3 @@
-/*
- * Copyright (c) 2018. Jonathan Peralez - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- */
-
-/*
- * Copyright (c) 2017. Jonathan Peralez - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- */
-
 import $ from 'jquery';
 
 const overlay = (function() {
