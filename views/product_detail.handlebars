@@ -12,11 +12,11 @@
 <div class="row">
 <div class="col-sm-12">
     <div class="slideshow-container">
-        {{#each product.imageURLArray}}
-            <div class="slide">
+        {{#addShowClassToFirstProductImage product.imageURLArray}}
+            <div class="slide {{displayFirstImage}}">
                 <img class="slideshow-image" src="{{image}}" />
             </div>
-        {{/each}}
+        {{/addShowClassToFirstProductImage}}
 
         <span class="prev" onclick="slideShowModule.prevSlide()">&#60;</span>
         <span class="next" onclick="slideShowModule.nextSlide()">&#62;</span>

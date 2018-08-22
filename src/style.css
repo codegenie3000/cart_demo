@@ -119,7 +119,7 @@ img.slideshow-image {
 
 .custom-overlay {
     display: none;
-    background-color: rgba(0,0,0,.7);
+    background-color: rgba(0,0,0,.5);
     z-index: 500;
     position: absolute;
     top: 0;
