@@ -34,7 +34,7 @@ ProductSchema
 	.get(function() {
         const cloudfrontURL = 'd1nvyzkpjmn5w2.cloudfront.net/';
         return this.images.map(image => {
-			return { image: 'https://' + cloudfrontURL + image };
+			return { image: '//' + cloudfrontURL + image };
 		});
 	});
 
