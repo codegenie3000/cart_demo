@@ -219,7 +219,7 @@ exports.stateList = (function() {
 exports.cart = (function() {
 	const findProducts = ((cartItemQtyArray, callback) => {
         const itemsInCart = cartItemQtyArray.map(item => {
-			return item.itemId;
+			return item.id;
 		});
 
 		Product.find({
@@ -232,7 +232,7 @@ exports.cart = (function() {
 
 				for (let i = 0; i < catalogItems.length; i++) {
 					cartItemQtyArray.forEach(cartItem => {
-						if (cartItem.itemId === catalogItems[i].id) {
+						if (cartItem.id === catalogItems[i].id) {
                             const tempItem = {};
 							tempItem.qty = cartItem.qty.toString();
 							tempItem.price = catalogItems[i].price.toString();
